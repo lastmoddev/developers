@@ -6,13 +6,24 @@
 <meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; script-src &#39;self&#39;; style-src &#39;self&#39; &#39;unsafe-inline&#39;; img-src &#39;self&#39; data:; font-src &#39;self&#39; data:; connect-src &#39;self&#39;; base-uri &#39;none&#39;; form-action &#39;none&#39;">
 <meta name="referrer" content="no-referrer">
 <meta name="color-scheme" content="light dark">
-<title>API reference — Lastmod for developers</title>
-<meta name="description" content="The Lastmod /v1 API reference: endpoints, parameters, responses and errors.">
+<title>Lastmod API reference — read-only /v1 REST API</title>
+<meta name="description" content="Reference of the Lastmod /v1 REST API: every read-only endpoint with its parameters, responses and errors, described in OpenAPI 3.1.">
+<link rel="canonical" href="https://developers.lastmod.ai/api/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Lastmod for developers">
+<meta property="og:title" content="Lastmod API reference — read-only /v1 REST API">
+<meta property="og:description" content="Reference of the Lastmod /v1 REST API: every read-only endpoint with its parameters, responses and errors, described in OpenAPI 3.1.">
+<meta property="og:image" content="https://developers.lastmod.ai/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Lastmod for developers: the Lastmod logo and the address developers.lastmod.ai">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/geist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/tokens.css">
 <link rel="stylesheet" href="/site.css">
 <link rel="stylesheet" href="/api/theme.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Lastmod for developers","item":"https://developers.lastmod.ai/"},{"@type":"ListItem","position":2,"name":"API reference","item":"https://developers.lastmod.ai/api/"}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -23,12 +34,160 @@
 </div>
 </header>
 <main id="main" class="reference">
-<div id="app"></div>
-<noscript><p class="main">The API reference needs JavaScript. The same description is available as <a href="/spec/v1.openapi.json">JSON</a>.</p></noscript>
+<div id="app"><div class="static-reference">
+<h1>Lastmod API reference</h1>
+<p class="lede">The read-only API of Lastmod (<code>/v1</code>). A field may be added; renaming, removing or changing the type of a field only happens in a new version. Timestamps are ISO 8601 in UTC, days are <code>YYYY-MM-DD</code>.</p>
+<p>The API is served from <code>https://api.lastmod.ai/v1</code>. Send an API key as a bearer token. The same description is available as <a href="/spec/v1.openapi.json">OpenAPI JSON</a>.</p>
+<h2>Endpoints</h2>
+<section id="get-v1-websites">
+<h3>List websites</h3>
+<p><code>GET /v1/websites</code></p>
+<p>The websites within the scope of the key.</p>
+
+</section>
+<section id="get-v1-websites-websiteid-opportunities">
+<h3>List opportunities</h3>
+<p><code>GET /v1/websites/{websiteId}/opportunities</code></p>
+<p>The opportunities of a website, with a filter on status and type.</p>
+<h4>Parameters</h4>
+<ul>
+<li><code>websiteId</code> (path, string, required)</li>
+<li><code>locale</code> (query, string (en, nl), optional): The language of the texts (<code>reason</code>, <code>recommendedAction</code>, task titles). Defaults to <code>en</code>.</li>
+<li><code>status</code> (query, string (OPEN, DISMISSED, CONVERTED, RESOLVED, VOIDED, ALL), optional): Only opportunities with this status. Without this parameter <code>RESOLVED</code> and <code>VOIDED</code> are omitted; <code>ALL</code> returns every status in one list.</li>
+<li><code>type</code> (query, string, optional): Only opportunities of this <code>type</code>, as it appears in the list.</li>
+<li><code>limit</code> (query, integer, optional): Number of opportunities per page, at most 200 (also the default). <code>meta.truncated</code> is <code>true</code> if there are more; then follow <code>meta.nextCursor</code>.</li>
+<li><code>cursor</code> (query, string, optional): <code>meta.nextCursor</code> of the previous page. Sorted by <code>lastSeenAt</code> descending, then <code>id</code>.</li>
+</ul>
+</section>
+<section id="get-v1-websites-websiteid-opportunities-opportunityid">
+<h3>Get an opportunity</h3>
+<p><code>GET /v1/websites/{websiteId}/opportunities/{opportunityId}</code></p>
+<p>A single opportunity, with resolution, task and evidence. For a site-wide opportunity the evidence holds at most 100 page rows; the summary row names <code>pagesAffected</code> (all pages involved) and <code>truncated</code>.</p>
+<h4>Parameters</h4>
+<ul>
+<li><code>websiteId</code> (path, string, required)</li>
+<li><code>opportunityId</code> (path, string, required)</li>
+<li><code>locale</code> (query, string (en, nl), optional): The language of the texts (<code>reason</code>, <code>recommendedAction</code>, task titles). Defaults to <code>en</code>.</li>
+</ul>
+</section>
+<section id="get-v1-websites-websiteid-tasks">
+<h3>List tasks</h3>
+<p><code>GET /v1/websites/{websiteId}/tasks</code></p>
+<p>The tasks of a website.</p>
+<h4>Parameters</h4>
+<ul>
+<li><code>websiteId</code> (path, string, required)</li>
+<li><code>locale</code> (query, string (en, nl), optional): The language of the texts (<code>reason</code>, <code>recommendedAction</code>, task titles). Defaults to <code>en</code>.</li>
+<li><code>status</code> (query, string (TODO, IN_PROGRESS, DONE, CANCELLED), optional): Only tasks with this status.</li>
+<li><code>limit</code> (query, integer, optional): Number of tasks per page, at most 200 (also the default). <code>meta.truncated</code> is <code>true</code> if there are more; then follow <code>meta.nextCursor</code>.</li>
+<li><code>cursor</code> (query, string, optional): <code>meta.nextCursor</code> of the previous page. Sorted by <code>id</code> descending (newest first).</li>
+</ul>
+</section>
+<section id="get-v1-websites-websiteid-results">
+<h3>List results</h3>
+<p><code>GET /v1/websites/{websiteId}/results</code></p>
+<p>The measured results of completed changes, most recent first, with a cursor.</p>
+<h4>Parameters</h4>
+<ul>
+<li><code>websiteId</code> (path, string, required)</li>
+<li><code>locale</code> (query, string (en, nl), optional): The language of the texts (<code>reason</code>, <code>recommendedAction</code>, task titles). Defaults to <code>en</code>.</li>
+<li><code>cursor</code> (query, string, optional): <code>meta.nextCursor</code> of the previous page.</li>
+<li><code>limit</code> (query, integer, optional): Number of results per page.</li>
+<li><code>band</code> (query, list of string (HIGH, MEDIUM, LOW, INCONCLUSIVE), optional): Only results with this reliability; repeat the parameter for more bands.</li>
+<li><code>mixed</code> (query, boolean, optional): <code>true</code>: only results with a mixed picture; <code>false</code>: only results without.</li>
+<li><code>from</code> (query, string, optional): Only results calculated from this moment, ISO 8601.</li>
+<li><code>to</code> (query, string, optional): Only results calculated up to this moment, ISO 8601.</li>
+</ul>
+</section>
+<section id="get-v1-websites-websiteid-kpis">
+<h3>Get KPIs</h3>
+<p><code>GET /v1/websites/{websiteId}/kpis</code></p>
+<p>The KPIs of a website over a period.</p>
+<h4>Parameters</h4>
+<ul>
+<li><code>websiteId</code> (path, string, required)</li>
+<li><code>locale</code> (query, string (en, nl), optional): The language of the texts (<code>reason</code>, <code>recommendedAction</code>, task titles). Defaults to <code>en</code>.</li>
+<li><code>periodStart</code> (query, string, required): Start of the period (inclusive), ISO 8601.</li>
+<li><code>periodEnd</code> (query, string, required): End of the period (exclusive), ISO 8601, after <code>periodStart</code> and within the maximum window.</li>
+</ul>
+</section>
+<section id="get-v1-websites-websiteid-timeseries">
+<h3>Get search performance</h3>
+<p><code>GET /v1/websites/{websiteId}/timeseries</code></p>
+<p>Search performance per day or per week, with markers for changes and events.</p>
+<h4>Parameters</h4>
+<ul>
+<li><code>websiteId</code> (path, string, required)</li>
+<li><code>locale</code> (query, string (en, nl), optional): The language of the texts (<code>reason</code>, <code>recommendedAction</code>, task titles). Defaults to <code>en</code>.</li>
+<li><code>periodStart</code> (query, string, required): Start of the period (inclusive), ISO 8601. With a time zone.</li>
+<li><code>periodEnd</code> (query, string, required): End of the period (exclusive), ISO 8601, after <code>periodStart</code> and within the maximum window. With a time zone.</li>
+<li><code>granularity</code> (query, string (auto, day, week), required): <code>day</code>, <code>week</code>, or <code>auto</code> (the API chooses; the response says which).</li>
+</ul>
+</section>
+<section id="get-v1-websites-websiteid-visibility">
+<h3>Get AI visibility</h3>
+<p><code>GET /v1/websites/{websiteId}/visibility</code></p>
+<p>AI visibility per engine over a recent window, with an uncertainty band and the previous measurement as a separate observation.</p>
+<h4>Parameters</h4>
+<ul>
+<li><code>websiteId</code> (path, string, required)</li>
+<li><code>locale</code> (query, string (en, nl), optional): The language of the texts (<code>reason</code>, <code>recommendedAction</code>, task titles). Defaults to <code>en</code>.</li>
+</ul>
+</section>
+<section id="get-v1-websites-websiteid-visibility-rounds">
+<h3>List measurement rounds</h3>
+<p><code>GET /v1/websites/{websiteId}/visibility/rounds</code></p>
+<p>The completed measurement rounds, oldest first, without a difference or trend.</p>
+<h4>Parameters</h4>
+<ul>
+<li><code>websiteId</code> (path, string, required)</li>
+<li><code>locale</code> (query, string (en, nl), optional): The language of the texts (<code>reason</code>, <code>recommendedAction</code>, task titles). Defaults to <code>en</code>.</li>
+</ul>
+</section>
+<section id="get-v1-websites-websiteid-visibility-prompts">
+<h3>List prompts</h3>
+<p><code>GET /v1/websites/{websiteId}/visibility/prompts</code></p>
+<p>The tracked and suggested questions with the plan limit. Read-only.</p>
+<h4>Parameters</h4>
+<ul>
+<li><code>websiteId</code> (path, string, required)</li>
+<li><code>locale</code> (query, string (en, nl), optional): The language of the texts (<code>reason</code>, <code>recommendedAction</code>, task titles). Defaults to <code>en</code>.</li>
+</ul>
+</section>
+<section id="get-v1-websites-websiteid-visibility-themes">
+<h3>List themes</h3>
+<p><code>GET /v1/websites/{websiteId}/visibility/themes</code></p>
+<p>Topics with answer counts per engine, and the opportunity and task that followed from the scan.</p>
+<h4>Parameters</h4>
+<ul>
+<li><code>websiteId</code> (path, string, required)</li>
+<li><code>locale</code> (query, string (en, nl), optional): The language of the texts (<code>reason</code>, <code>recommendedAction</code>, task titles). Defaults to <code>en</code>.</li>
+</ul>
+</section>
+<section id="get-v1-websites-websiteid-ai-referrals">
+<h3>Get AI referrals</h3>
+<p><code>GET /v1/websites/{websiteId}/ai-referrals</code></p>
+<p>Sessions in Google Analytics that come from AI assistants, as context. Covered days only.</p>
+<h4>Parameters</h4>
+<ul>
+<li><code>websiteId</code> (path, string, required)</li>
+<li><code>locale</code> (query, string (en, nl), optional): The language of the texts (<code>reason</code>, <code>recommendedAction</code>, task titles). Defaults to <code>en</code>.</li>
+<li><code>days</code> (query, integer (7, 28, 90), optional): The period in days: 7, 28 (default) or 90.</li>
+</ul>
+</section>
+<h2>Responses</h2>
+<ul>
+<li><code>200</code> Success.</li>
+<li><code>400</code> An invalid or unknown query parameter.</li>
+<li><code>401</code> Missing, invalid or expired key. The response carries <code>WWW-Authenticate: Bearer</code>.</li>
+<li><code>404</code> The website or object does not exist, or falls outside the scope of the key (deliberately the same response).</li>
+<li><code>429</code> Too many requests. <code>Retry-After</code> says after how many seconds you can retry.</li>
+</ul>
+</div></div>
 </main>
 <footer class="site-footer">
 <div class="site-footer__inner">
-<p>Lastmod is the proof layer for SEO and AI visibility. This site is static: no cookies, no analytics, and no calls to other servers.</p>
+<p><a href="https://www.lastmod.ai">Lastmod</a> is the proof layer for SEO and AI visibility. This site is static: no cookies, no analytics, and no calls to other servers.</p>
 <p><a href="https://www.lastmod.ai/en/privacy">Privacy</a> · <a href="https://www.lastmod.ai/en/subprocessors">Subprocessors</a></p>
 </div>
 </footer>

@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://developers.lastmod.ai/sitemap.xml

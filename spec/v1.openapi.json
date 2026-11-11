@@ -24,7 +24,8 @@
     "/v1/websites": {
       "get": {
         "operationId": "V1WebsitesController.list",
-        "summary": "The websites within the scope of the key.",
+        "summary": "List websites",
+        "description": "The websites within the scope of the key.",
         "tags": ["v1"],
         "parameters": [],
         "responses": {
@@ -98,7 +99,8 @@
     "/v1/websites/{websiteId}/opportunities": {
       "get": {
         "operationId": "V1OpportunitiesController.list",
-        "summary": "The opportunities of a website, with a filter on status and type.",
+        "summary": "List opportunities",
+        "description": "The opportunities of a website, with a filter on status and type.",
         "tags": ["v1"],
         "parameters": [
           {
@@ -232,8 +234,8 @@
     "/v1/websites/{websiteId}/opportunities/{opportunityId}": {
       "get": {
         "operationId": "V1OpportunitiesController.detail",
-        "summary": "A single opportunity, with resolution, task and evidence.",
-        "description": "For a site-wide opportunity the evidence holds at most 100 page rows; the summary row names `pagesAffected` (all pages involved) and `truncated`.",
+        "summary": "Get an opportunity",
+        "description": "A single opportunity, with resolution, task and evidence. For a site-wide opportunity the evidence holds at most 100 page rows; the summary row names `pagesAffected` (all pages involved) and `truncated`.",
         "tags": ["v1"],
         "parameters": [
           {
@@ -331,7 +333,8 @@
     "/v1/websites/{websiteId}/tasks": {
       "get": {
         "operationId": "V1TasksController.list",
-        "summary": "The tasks of a website.",
+        "summary": "List tasks",
+        "description": "The tasks of a website.",
         "tags": ["v1"],
         "parameters": [
           {
@@ -455,7 +458,8 @@
     "/v1/websites/{websiteId}/results": {
       "get": {
         "operationId": "V1ReportingController.results",
-        "summary": "The measured results of completed changes, most recent first, with a cursor.",
+        "summary": "List results",
+        "description": "The measured results of completed changes, most recent first, with a cursor.",
         "tags": ["v1"],
         "parameters": [
           {
@@ -612,7 +616,8 @@
     "/v1/websites/{websiteId}/kpis": {
       "get": {
         "operationId": "V1ReportingController.kpis",
-        "summary": "The KPIs of a website over a period.",
+        "summary": "Get KPIs",
+        "description": "The KPIs of a website over a period.",
         "tags": ["v1"],
         "parameters": [
           {
@@ -722,7 +727,8 @@
     "/v1/websites/{websiteId}/timeseries": {
       "get": {
         "operationId": "V1ReportingController.timeseries",
-        "summary": "Search performance per day or per week, with markers for changes and events.",
+        "summary": "Get search performance",
+        "description": "Search performance per day or per week, with markers for changes and events.",
         "tags": ["v1"],
         "parameters": [
           {
@@ -842,7 +848,8 @@
     "/v1/websites/{websiteId}/visibility": {
       "get": {
         "operationId": "V1VisibilityController.visibility",
-        "summary": "AI visibility per engine over a recent window, with an uncertainty band and the previous measurement as a separate observation.",
+        "summary": "Get AI visibility",
+        "description": "AI visibility per engine over a recent window, with an uncertainty band and the previous measurement as a separate observation.",
         "tags": ["v1"],
         "parameters": [
           {
@@ -932,7 +939,8 @@
     "/v1/websites/{websiteId}/visibility/rounds": {
       "get": {
         "operationId": "V1VisibilityController.rounds",
-        "summary": "The completed measurement rounds, oldest first, without a difference or trend.",
+        "summary": "List measurement rounds",
+        "description": "The completed measurement rounds, oldest first, without a difference or trend.",
         "tags": ["v1"],
         "parameters": [
           {
@@ -1022,7 +1030,8 @@
     "/v1/websites/{websiteId}/visibility/prompts": {
       "get": {
         "operationId": "V1VisibilityController.prompts",
-        "summary": "The tracked and suggested questions with the plan limit. Read-only.",
+        "summary": "List prompts",
+        "description": "The tracked and suggested questions with the plan limit. Read-only.",
         "tags": ["v1"],
         "parameters": [
           {
@@ -1112,7 +1121,8 @@
     "/v1/websites/{websiteId}/visibility/themes": {
       "get": {
         "operationId": "V1VisibilityController.themes",
-        "summary": "Topics with answer counts per engine, and the opportunity and task that followed from the scan.",
+        "summary": "List themes",
+        "description": "Topics with answer counts per engine, and the opportunity and task that followed from the scan.",
         "tags": ["v1"],
         "parameters": [
           {
@@ -1202,7 +1212,8 @@
     "/v1/websites/{websiteId}/ai-referrals": {
       "get": {
         "operationId": "V1VisibilityController.aiReferrals",
-        "summary": "Sessions in Google Analytics that come from AI assistants, as context. Covered days only.",
+        "summary": "Get AI referrals",
+        "description": "Sessions in Google Analytics that come from AI assistants, as context. Covered days only.",
         "tags": ["v1"],
         "parameters": [
           {

@@ -78,6 +78,16 @@ pre {
   border-bottom: 1px solid var(--border);
 }
 
+/* Op een breed scherm blijft de kop staan; op een telefoon loopt hij mee (hij kan daar over twee regels staan). */
+@media (min-width: 48rem) {
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: var(--background);
+  }
+}
+
 .site-header__inner,
 .main,
 .site-footer__inner {
@@ -349,4 +359,22 @@ th {
     min-height: 2.75rem;
     line-height: 2.75rem;
   }
+}
+
+/* De voorgerenderde referentie op /api/: zichtbaar tot Scalar hem vervangt, en de enige tekst voor wie geen JavaScript draait. */
+.static-reference {
+  max-width: 62rem;
+  margin: 0 auto;
+  padding: 2.5rem 1rem 4rem;
+}
+
+.static-reference section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.static-reference h4 {
+  margin: 1rem 0 0.25rem;
+  font-size: 0.9375rem;
 }
