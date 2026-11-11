@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; script-src &#39;self&#39;; style-src &#39;self&#39; &#39;unsafe-inline&#39;; img-src &#39;self&#39; data:; font-src &#39;self&#39; data:; connect-src &#39;self&#39;; base-uri &#39;none&#39;; form-action &#39;none&#39;">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="light dark">
+<title>MCP server — Lastmod for developers</title>
+<meta name="description" content="The Lastmod MCP server: read-only tools for AI assistants, with every argument.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/geist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/tokens.css">
+<link rel="stylesheet" href="/site.css">
+
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+<div class="site-header__inner">
+<a class="brand" href="/" aria-label="Lastmod developers"><svg class="brand__logo brand__logo--full" viewBox="0 0 5439 730" fill="none" aria-hidden="true" focusable="false"><g transform="translate(0 720.0) scale(1 -1)"><g stroke="currentColor"><path d="M65 65 H540" stroke-width="130" stroke-linecap="round"/><path d="M960 655 H1435" stroke-width="130" stroke-linecap="round"/></g><circle cx="750" cy="360" r="145" fill="var(--lastmod-brand, #3263c3)"/><g fill="currentColor"><path transform="translate(1813.0 0.0)" d="M67.0 0.0V720.0H193.0V0.0Z"/><path transform="translate(2043.0 0.0)" d="M385.0 0.0Q380.0 20.0 377.5 44.0Q375.0 68.0 375.0 102.0H371.0V344.0Q371.0 384.0 348.5 404.5Q326.0 425.0 280.0 425.0Q235.0 425.0 208.5 408.5Q182.0 392.0 176.0 361.0H55.0Q63.0 432.0 123.0 476.0Q183.0 520.0 284.0 520.0Q389.0 520.0 443.0 472.5Q497.0 425.0 497.0 333.0V102.0Q497.0 78.0 500.5 53.0Q504.0 28.0 511.0 0.0ZM208.0 -10.0Q131.0 -10.0 85.5 28.5Q40.0 67.0 40.0 132.0Q40.0 202.0 91.0 243.0Q142.0 284.0 235.0 298.0L394.0 322.0V242.0L256.0 221.0Q211.0 214.0 188.5 196.0Q166.0 178.0 166.0 146.0Q166.0 117.0 187.0 101.5Q208.0 86.0 245.0 86.0Q299.0 86.0 335.0 113.0Q371.0 140.0 371.0 179.0L385.0 102.0Q365.0 47.0 319.5 18.5Q274.0 -10.0 208.0 -10.0Z"/><path transform="translate(2561.0 0.0)" d="M262.0 -10.0Q156.0 -10.0 93.0 34.5Q30.0 79.0 24.0 158.0H139.0Q144.0 119.0 176.0 99.0Q208.0 79.0 262.0 79.0Q311.0 79.0 335.5 94.5Q360.0 110.0 360.0 139.0Q360.0 160.0 346.0 173.5Q332.0 187.0 293.0 196.0L211.0 215.0Q127.0 233.0 86.5 271.5Q46.0 310.0 46.0 368.0Q46.0 439.0 100.5 479.5Q155.0 520.0 251.0 520.0Q346.0 520.0 403.5 479.5Q461.0 439.0 467.0 368.0H352.0Q347.0 399.0 320.5 415.0Q294.0 431.0 248.0 431.0Q205.0 431.0 183.0 417.5Q161.0 404.0 161.0 378.0Q161.0 358.0 178.0 344.5Q195.0 331.0 235.0 321.0L323.0 301.0Q398.0 284.0 436.5 242.0Q475.0 200.0 475.0 143.0Q475.0 70.0 419.0 30.0Q363.0 -10.0 262.0 -10.0Z"/><path transform="translate(3024.0 0.0)" d="M296.0 -10.0Q202.0 -10.0 157.5 34.5Q113.0 79.0 113.0 168.0V626.0L240.0 673.0V165.0Q240.0 128.0 260.0 110.0Q280.0 92.0 323.0 92.0Q340.0 92.0 353.5 94.5Q367.0 97.0 379.0 101.0V3.0Q367.0 -3.0 345.0 -6.5Q323.0 -10.0 296.0 -10.0ZM15.0 411.0V510.0H379.0V411.0Z"/><path transform="translate(3400.0 0.0)" d="M67.0 0.0V510.0H190.0V390.0H193.0V0.0ZM410.0 0.0V329.0Q410.0 374.0 387.5 395.5Q365.0 417.0 324.0 417.0Q288.0 417.0 258.0 400.0Q228.0 383.0 210.5 352.0Q193.0 321.0 193.0 280.0L180.0 397.0Q206.0 453.0 255.0 486.5Q304.0 520.0 369.0 520.0Q447.0 520.0 492.0 475.5Q537.0 431.0 537.0 361.0V0.0ZM753.0 0.0V329.0Q753.0 374.0 731.0 395.5Q709.0 417.0 668.0 417.0Q631.0 417.0 601.0 400.0Q571.0 383.0 554.0 352.0Q537.0 321.0 537.0 280.0L515.0 397.0Q540.0 453.0 591.0 486.5Q642.0 520.0 709.0 520.0Q789.0 520.0 834.5 474.5Q880.0 429.0 880.0 354.0V0.0Z"/><path transform="translate(4311.0 0.0)" d="M299.0 -10.0Q218.0 -10.0 156.5 24.0Q95.0 58.0 61.0 118.5Q27.0 179.0 27.0 257.0Q27.0 335.0 61.0 394.0Q95.0 453.0 156.5 486.5Q218.0 520.0 299.0 520.0Q381.0 520.0 442.0 486.5Q503.0 453.0 537.0 394.0Q571.0 335.0 571.0 257.0Q571.0 179.0 536.5 118.5Q502.0 58.0 441.0 24.0Q380.0 -10.0 299.0 -10.0ZM299.0 91.0Q339.0 91.0 371.0 111.5Q403.0 132.0 421.0 169.5Q439.0 207.0 439.0 258.0Q439.0 333.0 399.5 376.0Q360.0 419.0 299.0 419.0Q238.0 419.0 198.0 376.0Q158.0 333.0 158.0 258.0Q158.0 207.0 176.5 169.5Q195.0 132.0 226.5 111.5Q258.0 91.0 299.0 91.0Z"/><path transform="translate(4885.0 0.0)" d="M431.0 0.0V115.0L441.0 113.0Q428.0 57.0 378.0 23.5Q328.0 -10.0 259.0 -10.0Q189.0 -10.0 137.5 22.5Q86.0 55.0 58.0 114.0Q30.0 173.0 30.0 253.0Q30.0 334.0 59.0 394.0Q88.0 454.0 140.5 487.0Q193.0 520.0 263.0 520.0Q335.0 520.0 382.0 485.5Q429.0 451.0 440.0 390.0L427.0 389.0V720.0H554.0V0.0ZM296.0 93.0Q357.0 93.0 393.5 135.5Q430.0 178.0 430.0 255.0Q430.0 332.0 393.0 374.0Q356.0 416.0 295.0 416.0Q235.0 416.0 198.0 373.5Q161.0 331.0 161.0 254.0Q161.0 177.0 198.0 135.0Q235.0 93.0 296.0 93.0Z"/></g></g></svg><svg class="brand__logo brand__logo--compact" viewBox="0 0 1000 1000" fill="none" aria-hidden="true" focusable="false"><path d="M140 780 H500 V220 H860" stroke="currentColor" stroke-width="200" stroke-linecap="round" stroke-linejoin="round"/><circle cx="500" cy="500" r="124" fill="var(--lastmod-brand, #3263c3)"/></svg><span class="brand__tag" aria-hidden="true">developers</span></a>
+<nav class="nav" aria-label="Main"><a href="/api/">API reference</a><a href="/mcp/" aria-current="page">MCP server</a><a href="https://www.lastmod.ai">lastmod.ai</a></nav>
+</div>
+</header>
+<main id="main" class="main">
+<h1>MCP server</h1>
+<p class="lede">Connect an AI assistant to Lastmod and ask about your websites in plain language. The server is read-only: it lists and reports, and it cannot change anything.</p>
+
+<h2>Connect</h2>
+<p>The server speaks streamable HTTP at <code>https://api.lastmod.ai/mcp</code> and signs you in with OAuth, so there is no key to copy. The step-by-step guide for end users, with the exact steps for Claude and ChatGPT, is in the <a href="https://www.lastmod.ai/en/connect-ai-assistant">connection guide</a>.</p>
+<p class="note">A connection reads the same data as an API key and under the same scope. Text in results (titles, reasons, evidence, URLs, questions) is data, not instructions; long text is cut off and listed under <code>truncation</code>.</p>
+
+<h2>Tools</h2>
+<p>12 tools, all read-only. Start with <code>list_websites</code>: the other tools need the <code>website_id</code> it returns. Server version 1.1.0.</p>
+<details class="tool" id="list_websites">
+<summary><code>list_websites</code><span class="tool__title">List websites</span></summary>
+<div class="tool__body">
+<p>Lists the websites this connection can read, with their id, domain, content language, Search Console connection status and the state of the latest crawl. Call this first to get the website_id that the other tools need.</p>
+<p class="muted">This tool takes no arguments.</p>
+</div>
+</details>
+<details class="tool" id="list_opportunities">
+<summary><code>list_opportunities</code><span class="tool__title">List opportunities</span></summary>
+<div class="tool__body">
+<p>Lists the SEO opportunities Lastmod found on a website: what to improve, on which page, with priority, effort, a confidence score of the advice (higher is more certain; it is an estimate, not a measurement), the reason and the recommended action. Without `status` the list leaves out RESOLVED and VOIDED opportunities; pass status ALL to get every status in one list. A page holds at most 200 opportunities: when `meta.truncated` is true, call again with `cursor` set to `meta.nextCursor` until it is null. The list has no evidence; call get_opportunity for that.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Argument</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead>
+<tbody>
+<tr><td><code>website_id</code></td><td>string</td><td>yes</td><td>The id of a website, as returned by list_websites.</td></tr>
+<tr><td><code>status</code></td><td>string: OPEN, DISMISSED, CONVERTED, RESOLVED, VOIDED, ALL</td><td>no</td><td>Only opportunities with this status; ALL returns every status. Default: all except RESOLVED and VOIDED.</td></tr>
+<tr><td><code>type</code></td><td>string</td><td>no</td><td>Only opportunities of this type, as it appears in the list.</td></tr>
+<tr><td><code>limit</code></td><td>integer</td><td>no</td><td>Page size, at most 200 (also the default).</td></tr>
+<tr><td><code>cursor</code></td><td>string</td><td>no</td><td>The `meta.nextCursor` of the previous page.</td></tr>
+<tr><td><code>locale</code></td><td>string: en, nl</td><td>no</td><td>Language of the generated texts (reasons, task titles). Default: the language of the organization.</td></tr>
+</tbody></table></div>
+</div>
+</details>
+<details class="tool" id="get_opportunity">
+<summary><code>get_opportunity</code><span class="tool__title">Get opportunity</span></summary>
+<div class="tool__body">
+<p>Returns one opportunity in detail, including the evidence Lastmod recorded when it detected it and, when it was resolved, how and when. A site-wide opportunity lists at most 100 pages in its evidence rows; the summary row carries `pagesAffected` (all affected pages) and `truncated`. When `pagesAffected` is above the number of page rows, say so (e.g. &#39;100 of 178 shown&#39;); the remaining pages are not available through this tool.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Argument</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead>
+<tbody>
+<tr><td><code>website_id</code></td><td>string</td><td>yes</td><td>The id of a website, as returned by list_websites.</td></tr>
+<tr><td><code>opportunity_id</code></td><td>string</td><td>yes</td><td>The id of an opportunity, as returned by list_opportunities.</td></tr>
+<tr><td><code>locale</code></td><td>string: en, nl</td><td>no</td><td>Language of the generated texts (reasons, task titles). Default: the language of the organization.</td></tr>
+</tbody></table></div>
+</div>
+</details>
+<details class="tool" id="list_tasks">
+<summary><code>list_tasks</code><span class="tool__title">List tasks</span></summary>
+<div class="tool__body">
+<p>Lists the tasks of a website (created from opportunities): title, reason, expected impact, priority, status, the page, the measurement state and step progress, newest first. Optionally filter by status. A page holds at most 200 tasks: when `meta.truncated` is true, call again with `cursor` set to `meta.nextCursor` until it is null.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Argument</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead>
+<tbody>
+<tr><td><code>website_id</code></td><td>string</td><td>yes</td><td>The id of a website, as returned by list_websites.</td></tr>
+<tr><td><code>status</code></td><td>string: TODO, IN_PROGRESS, DONE, CANCELLED</td><td>no</td><td>Only tasks with this status.</td></tr>
+<tr><td><code>limit</code></td><td>integer</td><td>no</td><td>Page size, at most 200 (also the default).</td></tr>
+<tr><td><code>cursor</code></td><td>string</td><td>no</td><td>The `meta.nextCursor` of the previous page.</td></tr>
+<tr><td><code>locale</code></td><td>string: en, nl</td><td>no</td><td>Language of the generated texts (reasons, task titles). Default: the language of the organization.</td></tr>
+</tbody></table></div>
+</div>
+</details>
+<details class="tool" id="list_results">
+<summary><code>list_results</code><span class="tool__title">List measured results</span></summary>
+<div class="tool__body">
+<p>Lists the measured results of finished tasks, newest first, cursor-paginated: the metric before and after the change, the relative change, and a confidence band of the measurement. A result is a measurement next to other changes, not proof of cause; when other changes overlapped, &#39;confounded&#39; is true and the reasons are listed. Pass meta.nextCursor as cursor for the next page.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Argument</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead>
+<tbody>
+<tr><td><code>website_id</code></td><td>string</td><td>yes</td><td>The id of a website, as returned by list_websites.</td></tr>
+<tr><td><code>cursor</code></td><td>string</td><td>no</td><td>meta.nextCursor of the previous page.</td></tr>
+<tr><td><code>limit</code></td><td>integer</td><td>no</td><td>Page size (at most 50).</td></tr>
+<tr><td><code>band</code></td><td>array</td><td>no</td><td>Only results in these confidence bands.</td></tr>
+<tr><td><code>from</code></td><td>string</td><td>no</td><td>Only results computed from this moment (ISO 8601).</td></tr>
+<tr><td><code>to</code></td><td>string</td><td>no</td><td>Only results computed up to this moment (ISO 8601).</td></tr>
+<tr><td><code>locale</code></td><td>string: en, nl</td><td>no</td><td>Language of the generated texts (reasons, task titles). Default: the language of the organization.</td></tr>
+</tbody></table></div>
+</div>
+</details>
+<details class="tool" id="get_kpis">
+<summary><code>get_kpis</code><span class="tool__title">Get KPIs</span></summary>
+<div class="tool__body">
+<p>Returns the dashboard KPI groups of a website for a period: opportunity inventory, tasks completed, changes in monitoring, measured results by confidence band, and search presence. Counts of results describe measurements, not proven causes.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Argument</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead>
+<tbody>
+<tr><td><code>website_id</code></td><td>string</td><td>yes</td><td>The id of a website, as returned by list_websites.</td></tr>
+<tr><td><code>period_start</code></td><td>string</td><td>yes</td><td>Start of the period, ISO 8601 with a timezone offset, e.g. 2026-09-01T00:00:00.000Z.</td></tr>
+<tr><td><code>period_end</code></td><td>string</td><td>yes</td><td>End of the period (after the start), ISO 8601 with a timezone offset.</td></tr>
+<tr><td><code>locale</code></td><td>string: en, nl</td><td>no</td><td>Language of the generated texts (reasons, task titles). Default: the language of the organization.</td></tr>
+</tbody></table></div>
+</div>
+</details>
+<details class="tool" id="get_search_timeseries">
+<summary><code>get_search_timeseries</code><span class="tool__title">Get search performance time series</span></summary>
+<div class="tool__body">
+<p>Returns the Search Console performance of a website over time (clicks, impressions, CTR, position) with markers for the changes made in that period. Markers show when a change was made; they do not show that the change caused the movement.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Argument</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead>
+<tbody>
+<tr><td><code>website_id</code></td><td>string</td><td>yes</td><td>The id of a website, as returned by list_websites.</td></tr>
+<tr><td><code>period_start</code></td><td>string</td><td>yes</td><td>Start of the period, ISO 8601 with a timezone offset, e.g. 2026-09-01T00:00:00.000Z.</td></tr>
+<tr><td><code>period_end</code></td><td>string</td><td>yes</td><td>End of the period (after the start), ISO 8601 with a timezone offset.</td></tr>
+<tr><td><code>granularity</code></td><td>string: day, week, auto</td><td>yes</td><td>Bucket size: day, week, or auto (chosen from the length of the period).</td></tr>
+<tr><td><code>locale</code></td><td>string: en, nl</td><td>no</td><td>Language of the generated texts (reasons, task titles). Default: the language of the organization.</td></tr>
+</tbody></table></div>
+</div>
+</details>
+<details class="tool" id="get_ai_visibility">
+<summary><code>get_ai_visibility</code><span class="tool__title">Get AI visibility</span></summary>
+<div class="tool__body">
+<p>Returns how often AI engines mention a website and cite its pages over a recent window, per engine: counts of answers with an uncertainty interval and a reliability band. When there is too little data the result is INSUFFICIENT_DATA and carries no figure. An engine that could not be measured is listed under unavailableEngines; that is not a zero. The previous period is a loose observation, not a comparison. A measurement is not proof of cause.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Argument</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead>
+<tbody>
+<tr><td><code>website_id</code></td><td>string</td><td>yes</td><td>The id of a website, as returned by list_websites.</td></tr>
+<tr><td><code>locale</code></td><td>string: en, nl</td><td>no</td><td>Language of the generated texts (reasons, task titles). Default: the language of the organization.</td></tr>
+</tbody></table></div>
+</div>
+</details>
+<details class="tool" id="list_ai_visibility_rounds">
+<summary><code>list_ai_visibility_rounds</code><span class="tool__title">List AI visibility rounds</span></summary>
+<div class="tool__body">
+<p>Lists the completed measurement rounds of a website&#39;s AI visibility: when each round ran and how many answers it counted per engine. Descriptive only; it does not rank rounds or say whether visibility went up or down.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Argument</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead>
+<tbody>
+<tr><td><code>website_id</code></td><td>string</td><td>yes</td><td>The id of a website, as returned by list_websites.</td></tr>
+<tr><td><code>locale</code></td><td>string: en, nl</td><td>no</td><td>Language of the generated texts (reasons, task titles). Default: the language of the organization.</td></tr>
+</tbody></table></div>
+</div>
+</details>
+<details class="tool" id="list_visibility_prompts">
+<summary><code>list_visibility_prompts</code><span class="tool__title">List visibility prompts</span></summary>
+<div class="tool__body">
+<p>Lists the questions Lastmod asks AI engines for a website (status, source, whether the text contains the brand, theme) with the active count and the limit. Retired questions are not included. Read-only: prompts are managed in the Lastmod dashboard.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Argument</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead>
+<tbody>
+<tr><td><code>website_id</code></td><td>string</td><td>yes</td><td>The id of a website, as returned by list_websites.</td></tr>
+<tr><td><code>locale</code></td><td>string: en, nl</td><td>no</td><td>Language of the generated texts (reasons, task titles). Default: the language of the organization.</td></tr>
+</tbody></table></div>
+</div>
+</details>
+<details class="tool" id="get_visibility_themes">
+<summary><code>get_visibility_themes</code><span class="tool__title">Get visibility theme gaps</span></summary>
+<div class="tool__body">
+<p>Returns the themes where AI engines answered without mentioning the website, with the kinds of sources they cited and the linked opportunity or task. Source hosts appear only when they recur across answers. A theme gap is an observation about the answers seen, not a ranking.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Argument</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead>
+<tbody>
+<tr><td><code>website_id</code></td><td>string</td><td>yes</td><td>The id of a website, as returned by list_websites.</td></tr>
+<tr><td><code>locale</code></td><td>string: en, nl</td><td>no</td><td>Language of the generated texts (reasons, task titles). Default: the language of the organization.</td></tr>
+</tbody></table></div>
+</div>
+</details>
+<details class="tool" id="get_ai_referrals">
+<summary><code>get_ai_referrals</code><span class="tool__title">Get AI referrals</span></summary>
+<div class="tool__body">
+<p>Returns the visits that reached a website from AI assistants, from Google Analytics 4, per source, for the last 7, 28 or 90 days (default 28). The status says whether Analytics is connected; without a connection nothing is measured, which is not zero visits.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Argument</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead>
+<tbody>
+<tr><td><code>website_id</code></td><td>string</td><td>yes</td><td>The id of a website, as returned by list_websites.</td></tr>
+<tr><td><code>days</code></td><td>integer: 7, 28, 90</td><td>no</td><td>Period in days: 7, 28 or 90. Default: 28.</td></tr>
+<tr><td><code>locale</code></td><td>string: en, nl</td><td>no</td><td>Language of the generated texts (reasons, task titles). Default: the language of the organization.</td></tr>
+</tbody></table></div>
+</div>
+</details>
+
+<h2>The same data over REST</h2>
+<p>Every tool reads the same data as a <code>/v1</code> endpoint. Prefer the <a href="/api/">API reference</a> when you are writing code rather than talking to an assistant.</p>
+
+</main>
+<footer class="site-footer">
+<div class="site-footer__inner">
+<p>Lastmod is the proof layer for SEO and AI visibility. This site is static: no cookies, no analytics, and no calls to other servers.</p>
+<p><a href="https://www.lastmod.ai/en/privacy">Privacy</a> · <a href="https://www.lastmod.ai/en/subprocessors">Subprocessors</a></p>
+</div>
+</footer>
+
+</body>
+</html>

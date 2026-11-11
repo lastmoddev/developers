@@ -1,0 +1,3629 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Lastmod API",
+    "version": "1",
+    "description": "The read-only API of Lastmod (`/v1`). A field may be added; renaming, removing or changing the type of a field only happens in a new version. Timestamps are ISO 8601 in UTC, days are `YYYY-MM-DD`."
+  },
+  "servers": [
+    {
+      "url": "https://api.lastmod.ai"
+    }
+  ],
+  "security": [
+    {
+      "apiKey": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "v1"
+    }
+  ],
+  "paths": {
+    "/v1/websites": {
+      "get": {
+        "operationId": "V1WebsitesController.list",
+        "summary": "The websites within the scope of the key.",
+        "tags": ["v1"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/V1Website"
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": ["data", "meta"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "An invalid or unknown query parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid or expired key. The response carries `WWW-Authenticate: Bearer`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The website or object does not exist, or falls outside the scope of the key (deliberately the same response).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests. `Retry-After` says after how many seconds you can retry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/websites/{websiteId}/opportunities": {
+      "get": {
+        "operationId": "V1OpportunitiesController.list",
+        "summary": "The opportunities of a website, with a filter on status and type.",
+        "tags": ["v1"],
+        "parameters": [
+          {
+            "name": "websiteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "description": "The language of the texts (`reason`, `recommendedAction`, task titles). Defaults to `en`.",
+            "schema": {
+              "type": "string",
+              "enum": ["en", "nl"],
+              "default": "en"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "Only opportunities with this status. Without this parameter `RESOLVED` and `VOIDED` are omitted; `ALL` returns every status in one list.",
+            "schema": {
+              "type": "string",
+              "enum": ["OPEN", "DISMISSED", "CONVERTED", "RESOLVED", "VOIDED", "ALL"]
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "description": "Only opportunities of this `type`, as it appears in the list.",
+            "schema": {
+              "type": "string",
+              "maxLength": 100
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Number of opportunities per page, at most 200 (also the default). `meta.truncated` is `true` if there are more; then follow `meta.nextCursor`.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "`meta.nextCursor` of the previous page. Sorted by `lastSeenAt` descending, then `id`.",
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/V1Opportunity"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/V1OpportunityListMeta"
+                    }
+                  },
+                  "required": ["data", "meta"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "An invalid or unknown query parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid or expired key. The response carries `WWW-Authenticate: Bearer`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The website or object does not exist, or falls outside the scope of the key (deliberately the same response).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests. `Retry-After` says after how many seconds you can retry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/websites/{websiteId}/opportunities/{opportunityId}": {
+      "get": {
+        "operationId": "V1OpportunitiesController.detail",
+        "summary": "A single opportunity, with resolution, task and evidence.",
+        "description": "For a site-wide opportunity the evidence holds at most 100 page rows; the summary row names `pagesAffected` (all pages involved) and `truncated`.",
+        "tags": ["v1"],
+        "parameters": [
+          {
+            "name": "websiteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "opportunityId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "description": "The language of the texts (`reason`, `recommendedAction`, task titles). Defaults to `en`.",
+            "schema": {
+              "type": "string",
+              "enum": ["en", "nl"],
+              "default": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/V1OpportunityDetail"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/V1DetailMeta"
+                    }
+                  },
+                  "required": ["data", "meta"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "An invalid or unknown query parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid or expired key. The response carries `WWW-Authenticate: Bearer`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The website or object does not exist, or falls outside the scope of the key (deliberately the same response).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests. `Retry-After` says after how many seconds you can retry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/websites/{websiteId}/tasks": {
+      "get": {
+        "operationId": "V1TasksController.list",
+        "summary": "The tasks of a website.",
+        "tags": ["v1"],
+        "parameters": [
+          {
+            "name": "websiteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "description": "The language of the texts (`reason`, `recommendedAction`, task titles). Defaults to `en`.",
+            "schema": {
+              "type": "string",
+              "enum": ["en", "nl"],
+              "default": "en"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "Only tasks with this status.",
+            "schema": {
+              "type": "string",
+              "enum": ["TODO", "IN_PROGRESS", "DONE", "CANCELLED"]
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Number of tasks per page, at most 200 (also the default). `meta.truncated` is `true` if there are more; then follow `meta.nextCursor`.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "`meta.nextCursor` of the previous page. Sorted by `id` descending (newest first).",
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/V1Task"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/V1TaskListMeta"
+                    }
+                  },
+                  "required": ["data", "meta"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "An invalid or unknown query parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid or expired key. The response carries `WWW-Authenticate: Bearer`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The website or object does not exist, or falls outside the scope of the key (deliberately the same response).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests. `Retry-After` says after how many seconds you can retry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/websites/{websiteId}/results": {
+      "get": {
+        "operationId": "V1ReportingController.results",
+        "summary": "The measured results of completed changes, most recent first, with a cursor.",
+        "tags": ["v1"],
+        "parameters": [
+          {
+            "name": "websiteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "description": "The language of the texts (`reason`, `recommendedAction`, task titles). Defaults to `en`.",
+            "schema": {
+              "type": "string",
+              "enum": ["en", "nl"],
+              "default": "en"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "`meta.nextCursor` of the previous page.",
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Number of results per page.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "band",
+            "in": "query",
+            "required": false,
+            "description": "Only results with this reliability; repeat the parameter for more bands.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["HIGH", "MEDIUM", "LOW", "INCONCLUSIVE"]
+              }
+            },
+            "style": "form",
+            "explode": true
+          },
+          {
+            "name": "mixed",
+            "in": "query",
+            "required": false,
+            "description": "`true`: only results with a mixed picture; `false`: only results without.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "description": "Only results calculated from this moment, ISO 8601.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "description": "Only results calculated up to this moment, ISO 8601.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/V1Result"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/V1ResultsMeta"
+                    }
+                  },
+                  "required": ["data", "meta"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "An invalid or unknown query parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid or expired key. The response carries `WWW-Authenticate: Bearer`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The website or object does not exist, or falls outside the scope of the key (deliberately the same response).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests. `Retry-After` says after how many seconds you can retry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/websites/{websiteId}/kpis": {
+      "get": {
+        "operationId": "V1ReportingController.kpis",
+        "summary": "The KPIs of a website over a period.",
+        "tags": ["v1"],
+        "parameters": [
+          {
+            "name": "websiteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "description": "The language of the texts (`reason`, `recommendedAction`, task titles). Defaults to `en`.",
+            "schema": {
+              "type": "string",
+              "enum": ["en", "nl"],
+              "default": "en"
+            }
+          },
+          {
+            "name": "periodStart",
+            "in": "query",
+            "required": true,
+            "description": "Start of the period (inclusive), ISO 8601.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "periodEnd",
+            "in": "query",
+            "required": true,
+            "description": "End of the period (exclusive), ISO 8601, after `periodStart` and within the maximum window.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/V1Kpis"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/V1KpisMeta"
+                    }
+                  },
+                  "required": ["data", "meta"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "An invalid or unknown query parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid or expired key. The response carries `WWW-Authenticate: Bearer`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The website or object does not exist, or falls outside the scope of the key (deliberately the same response).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests. `Retry-After` says after how many seconds you can retry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/websites/{websiteId}/timeseries": {
+      "get": {
+        "operationId": "V1ReportingController.timeseries",
+        "summary": "Search performance per day or per week, with markers for changes and events.",
+        "tags": ["v1"],
+        "parameters": [
+          {
+            "name": "websiteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "description": "The language of the texts (`reason`, `recommendedAction`, task titles). Defaults to `en`.",
+            "schema": {
+              "type": "string",
+              "enum": ["en", "nl"],
+              "default": "en"
+            }
+          },
+          {
+            "name": "periodStart",
+            "in": "query",
+            "required": true,
+            "description": "Start of the period (inclusive), ISO 8601. With a time zone.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "periodEnd",
+            "in": "query",
+            "required": true,
+            "description": "End of the period (exclusive), ISO 8601, after `periodStart` and within the maximum window. With a time zone.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "granularity",
+            "in": "query",
+            "required": true,
+            "description": "`day`, `week`, or `auto` (the API chooses; the response says which).",
+            "schema": {
+              "type": "string",
+              "enum": ["auto", "day", "week"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/V1Timeseries"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/V1TimeseriesMeta"
+                    }
+                  },
+                  "required": ["data", "meta"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "An invalid or unknown query parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid or expired key. The response carries `WWW-Authenticate: Bearer`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The website or object does not exist, or falls outside the scope of the key (deliberately the same response).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests. `Retry-After` says after how many seconds you can retry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/websites/{websiteId}/visibility": {
+      "get": {
+        "operationId": "V1VisibilityController.visibility",
+        "summary": "AI visibility per engine over a recent window, with an uncertainty band and the previous measurement as a separate observation.",
+        "tags": ["v1"],
+        "parameters": [
+          {
+            "name": "websiteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "description": "The language of the texts (`reason`, `recommendedAction`, task titles). Defaults to `en`.",
+            "schema": {
+              "type": "string",
+              "enum": ["en", "nl"],
+              "default": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/V1Visibility"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/V1DetailMeta"
+                    }
+                  },
+                  "required": ["data", "meta"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "An invalid or unknown query parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid or expired key. The response carries `WWW-Authenticate: Bearer`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The website or object does not exist, or falls outside the scope of the key (deliberately the same response).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests. `Retry-After` says after how many seconds you can retry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/websites/{websiteId}/visibility/rounds": {
+      "get": {
+        "operationId": "V1VisibilityController.rounds",
+        "summary": "The completed measurement rounds, oldest first, without a difference or trend.",
+        "tags": ["v1"],
+        "parameters": [
+          {
+            "name": "websiteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "description": "The language of the texts (`reason`, `recommendedAction`, task titles). Defaults to `en`.",
+            "schema": {
+              "type": "string",
+              "enum": ["en", "nl"],
+              "default": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/V1VisibilityRounds"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/V1DetailMeta"
+                    }
+                  },
+                  "required": ["data", "meta"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "An invalid or unknown query parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid or expired key. The response carries `WWW-Authenticate: Bearer`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The website or object does not exist, or falls outside the scope of the key (deliberately the same response).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests. `Retry-After` says after how many seconds you can retry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/websites/{websiteId}/visibility/prompts": {
+      "get": {
+        "operationId": "V1VisibilityController.prompts",
+        "summary": "The tracked and suggested questions with the plan limit. Read-only.",
+        "tags": ["v1"],
+        "parameters": [
+          {
+            "name": "websiteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "description": "The language of the texts (`reason`, `recommendedAction`, task titles). Defaults to `en`.",
+            "schema": {
+              "type": "string",
+              "enum": ["en", "nl"],
+              "default": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/V1VisibilityPrompts"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/V1DetailMeta"
+                    }
+                  },
+                  "required": ["data", "meta"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "An invalid or unknown query parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid or expired key. The response carries `WWW-Authenticate: Bearer`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The website or object does not exist, or falls outside the scope of the key (deliberately the same response).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests. `Retry-After` says after how many seconds you can retry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/websites/{websiteId}/visibility/themes": {
+      "get": {
+        "operationId": "V1VisibilityController.themes",
+        "summary": "Topics with answer counts per engine, and the opportunity and task that followed from the scan.",
+        "tags": ["v1"],
+        "parameters": [
+          {
+            "name": "websiteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "description": "The language of the texts (`reason`, `recommendedAction`, task titles). Defaults to `en`.",
+            "schema": {
+              "type": "string",
+              "enum": ["en", "nl"],
+              "default": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/V1VisibilityThemes"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/V1DetailMeta"
+                    }
+                  },
+                  "required": ["data", "meta"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "An invalid or unknown query parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid or expired key. The response carries `WWW-Authenticate: Bearer`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The website or object does not exist, or falls outside the scope of the key (deliberately the same response).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests. `Retry-After` says after how many seconds you can retry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/websites/{websiteId}/ai-referrals": {
+      "get": {
+        "operationId": "V1VisibilityController.aiReferrals",
+        "summary": "Sessions in Google Analytics that come from AI assistants, as context. Covered days only.",
+        "tags": ["v1"],
+        "parameters": [
+          {
+            "name": "websiteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "description": "The language of the texts (`reason`, `recommendedAction`, task titles). Defaults to `en`.",
+            "schema": {
+              "type": "string",
+              "enum": ["en", "nl"],
+              "default": "en"
+            }
+          },
+          {
+            "name": "days",
+            "in": "query",
+            "required": false,
+            "description": "The period in days: 7, 28 (default) or 90.",
+            "schema": {
+              "type": "integer",
+              "enum": [7, 28, 90]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/V1AiReferrals"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/V1DetailMeta"
+                    }
+                  },
+                  "required": ["data", "meta"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "An invalid or unknown query parameter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid or expired key. The response carries `WWW-Authenticate: Bearer`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The website or object does not exist, or falls outside the scope of the key (deliberately the same response).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests. `Retry-After` says after how many seconds you can retry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/V1Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "apiKey": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "An API key `lm_…` from your organisation settings, sent as `Authorization: Bearer lm_…`."
+      }
+    },
+    "schemas": {
+      "V1ListMeta": {
+        "type": "object",
+        "properties": {
+          "truncated": {
+            "type": "boolean",
+            "description": "`true` = the list was cut off at the server cap; there are more rows than shown here."
+          },
+          "locale": {
+            "$ref": "#/components/schemas/Locale"
+          }
+        },
+        "required": ["truncated", "locale"],
+        "additionalProperties": false
+      },
+      "Locale": {
+        "type": "string",
+        "enum": ["en", "nl"]
+      },
+      "V1Website": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "clientLabel": {
+            "type": ["string", "null"],
+            "description": "An internal label for the client (for an agency: the client name); `null` = not set."
+          },
+          "client": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": ["id", "name"],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The agency client this website belongs to; `null` = no client. `clientLabel` is the name of this client and stays; `id` is stable and groups websites of the same client (renaming does not change it)."
+          },
+          "contentLanguage": {
+            "type": ["string", "null"],
+            "description": "The content language of the website (primary subtag, e.g. `nl`); `null` = not determined yet."
+          },
+          "searchConsole": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "required": ["status"],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Only the status of the Search Console connection; `null` = never connected."
+          },
+          "latestCrawl": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": ["RUNNING", "SUCCESS", "FAILED"]
+                  },
+                  "finishedAt": {
+                    "type": ["string", "null"]
+                  },
+                  "pagesCrawled": {
+                    "type": "number"
+                  }
+                },
+                "required": ["status", "finishedAt", "pagesCrawled"],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The latest crawl; `null` = never crawled."
+          }
+        },
+        "required": [
+          "id",
+          "domain",
+          "clientLabel",
+          "client",
+          "contentLanguage",
+          "searchConsole",
+          "latestCrawl"
+        ],
+        "additionalProperties": false
+      },
+      "V1ProofKind": {
+        "type": "string",
+        "enum": ["implementation", "clicks", "publication", "decision"],
+        "description": "What an opportunity promises to prove: `implementation` = the change can be checked on the page, `clicks` = a before/after click comparison, `publication` = a count after publication (no effect claim), `decision` = a decision by the customer. An added value is not a breaking change: expect unknown values."
+      },
+      "V1Opportunity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "subjectType": {
+            "type": "string",
+            "enum": ["PAGE", "SITE"]
+          },
+          "pageUrl": {
+            "type": ["string", "null"],
+            "description": "The page the opportunity is about; `null` for a site-wide opportunity."
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["LOW", "MEDIUM", "HIGH"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["OPEN", "DISMISSED", "CONVERTED", "RESOLVED", "VOIDED"]
+          },
+          "effort": {
+            "type": ["string", "null"],
+            "enum": ["LOW", "MEDIUM", null],
+            "description": "How much work: `LOW` (a text change) or `MEDIUM`; `null` = no estimate stored."
+          },
+          "confidence": {
+            "type": "number",
+            "description": "\"Certainty of the advice\": higher = more certain. An assessment of the advice, not a measurement."
+          },
+          "reason": {
+            "type": "string"
+          },
+          "recommendedAction": {
+            "type": "string"
+          },
+          "textLocale": {
+            "$ref": "#/components/schemas/Locale"
+          },
+          "firstDetectedAt": {
+            "type": "string"
+          },
+          "lastSeenAt": {
+            "type": "string"
+          },
+          "resolvedAt": {
+            "type": ["string", "null"]
+          },
+          "reopenedAt": {
+            "type": ["string", "null"]
+          },
+          "proof": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/V1ProofKind"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The proof family of this opportunity type; `null` = a type we do not know."
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "subjectType",
+          "pageUrl",
+          "priority",
+          "status",
+          "effort",
+          "confidence",
+          "reason",
+          "recommendedAction",
+          "textLocale",
+          "firstDetectedAt",
+          "lastSeenAt",
+          "resolvedAt",
+          "reopenedAt",
+          "proof"
+        ],
+        "additionalProperties": false
+      },
+      "V1OpportunityEvidence": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "data": {
+            "description": "The recorded evidence; its shape depends on `source`."
+          }
+        },
+        "required": ["id", "source", "data"],
+        "additionalProperties": false
+      },
+      "V1OpportunityDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "subjectType": {
+            "type": "string",
+            "enum": ["PAGE", "SITE"]
+          },
+          "pageUrl": {
+            "type": ["string", "null"],
+            "description": "The page the opportunity is about; `null` for a site-wide opportunity."
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["LOW", "MEDIUM", "HIGH"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["OPEN", "DISMISSED", "CONVERTED", "RESOLVED", "VOIDED"]
+          },
+          "effort": {
+            "type": ["string", "null"],
+            "enum": ["LOW", "MEDIUM", null],
+            "description": "How much work: `LOW` (a text change) or `MEDIUM`; `null` = no estimate stored."
+          },
+          "confidence": {
+            "type": "number",
+            "description": "\"Certainty of the advice\": higher = more certain. An assessment of the advice, not a measurement."
+          },
+          "reason": {
+            "type": "string"
+          },
+          "recommendedAction": {
+            "type": "string"
+          },
+          "textLocale": {
+            "$ref": "#/components/schemas/Locale"
+          },
+          "firstDetectedAt": {
+            "type": "string"
+          },
+          "lastSeenAt": {
+            "type": "string"
+          },
+          "resolvedAt": {
+            "type": ["string", "null"]
+          },
+          "reopenedAt": {
+            "type": ["string", "null"]
+          },
+          "proof": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/V1ProofKind"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The proof family of this opportunity type; `null` = a type we do not know."
+          },
+          "resolution": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string"
+                  },
+                  "basis": {
+                    "type": "string"
+                  },
+                  "observedAt": {
+                    "type": "string"
+                  }
+                },
+                "required": ["reason", "basis", "observedAt"],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "How the opportunity was resolved, if it was (the latest resolution, also after reopening)."
+          },
+          "taskId": {
+            "type": ["string", "null"],
+            "description": "The id of the task that came out of this opportunity (status `CONVERTED`)."
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/V1OpportunityEvidence"
+            }
+          }
+        },
+        "required": [
+          "confidence",
+          "effort",
+          "evidence",
+          "firstDetectedAt",
+          "id",
+          "lastSeenAt",
+          "pageUrl",
+          "priority",
+          "proof",
+          "reason",
+          "recommendedAction",
+          "reopenedAt",
+          "resolution",
+          "resolvedAt",
+          "status",
+          "subjectType",
+          "taskId",
+          "textLocale",
+          "type"
+        ],
+        "additionalProperties": false
+      },
+      "V1DetailMeta": {
+        "type": "object",
+        "properties": {
+          "locale": {
+            "$ref": "#/components/schemas/Locale"
+          }
+        },
+        "required": ["locale"],
+        "additionalProperties": false,
+        "description": "The `meta` of a single opportunity: the language of the texts."
+      },
+      "V1OpportunityListMeta": {
+        "type": "object",
+        "properties": {
+          "truncated": {
+            "type": "boolean",
+            "description": "`true` = the list was cut off at the server cap; there are more rows than shown here."
+          },
+          "locale": {
+            "$ref": "#/components/schemas/Locale"
+          },
+          "resolvedCount": {
+            "type": "number",
+            "description": "Number of resolved opportunities within the type filter, for an \"N resolved\" line."
+          },
+          "lastScanAt": {
+            "type": ["string", "null"],
+            "description": "Start of the latest successful scan; `null` = never scanned."
+          },
+          "nextCursor": {
+            "type": ["string", "null"],
+            "description": "Pass this as `cursor` for the next page; `null` = last page."
+          }
+        },
+        "required": ["lastScanAt", "locale", "nextCursor", "resolvedCount", "truncated"],
+        "additionalProperties": false
+      },
+      "V1TaskListMeta": {
+        "type": "object",
+        "properties": {
+          "truncated": {
+            "type": "boolean",
+            "description": "`true` = the list was cut off at the server cap; there are more rows than shown here."
+          },
+          "locale": {
+            "$ref": "#/components/schemas/Locale"
+          },
+          "nextCursor": {
+            "type": ["string", "null"],
+            "description": "Pass this as `cursor` for the next page; `null` = last page."
+          }
+        },
+        "required": ["locale", "nextCursor", "truncated"],
+        "additionalProperties": false
+      },
+      "V1Task": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "opportunityId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "expectedImpact": {
+            "type": ["string", "null"]
+          },
+          "textLocale": {
+            "$ref": "#/components/schemas/Locale"
+          },
+          "confidence": {
+            "type": "number"
+          },
+          "effort": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["LOW", "MEDIUM", "HIGH"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["TODO", "IN_PROGRESS", "DONE", "CANCELLED"]
+          },
+          "pageUrl": {
+            "type": ["string", "null"]
+          },
+          "createdAt": {
+            "type": ["string", "null"],
+            "description": "Creation time and latest status change; `null` = unknown."
+          },
+          "updatedAt": {
+            "type": ["string", "null"]
+          },
+          "measurement": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string"
+                  },
+                  "verificationStatus": {
+                    "type": "string"
+                  }
+                },
+                "required": ["status", "verificationStatus"],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Only the state of the measurement; the figures are in the results. `null` = not measured yet."
+          },
+          "voided": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "at": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                },
+                "required": ["at", "reason"],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The system declared the detection behind this task incorrect; `null` = not voided."
+          },
+          "stepProgress": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "done": {
+                    "type": "number"
+                  },
+                  "total": {
+                    "type": "number"
+                  }
+                },
+                "required": ["done", "total"],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Progress of the steps of a site-wide task; `null` = no steps."
+          },
+          "proof": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/V1ProofKind"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The proof family of the opportunity behind this task; `null` = unknown. Determines what `measurement` means."
+          }
+        },
+        "required": [
+          "id",
+          "opportunityId",
+          "title",
+          "reason",
+          "expectedImpact",
+          "textLocale",
+          "confidence",
+          "effort",
+          "priority",
+          "status",
+          "pageUrl",
+          "createdAt",
+          "updatedAt",
+          "measurement",
+          "voided",
+          "stepProgress",
+          "proof"
+        ],
+        "additionalProperties": false
+      },
+      "V1Result": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "taskId": {
+            "type": "string"
+          },
+          "taskTitle": {
+            "type": "string"
+          },
+          "opportunityType": {
+            "type": "string"
+          },
+          "changeType": {
+            "type": "string"
+          },
+          "pageUrl": {
+            "type": "string"
+          },
+          "markedDoneAt": {
+            "type": "string"
+          },
+          "baselineWindowStart": {
+            "type": "string"
+          },
+          "baselineWindowEnd": {
+            "type": "string"
+          },
+          "monitoringWindowEnd": {
+            "type": "string"
+          },
+          "computedAt": {
+            "type": "string"
+          },
+          "metric": {
+            "type": "string"
+          },
+          "baselineValue": {
+            "type": "number"
+          },
+          "postValue": {
+            "type": "number"
+          },
+          "deltaPct": {
+            "type": ["number", "null"],
+            "description": "Fraction (0.18 = +18%); `null` if the change is not defined (baseline zero). What it is measured against is stated in `comparison`."
+          },
+          "baselineImpressions": {
+            "type": "number"
+          },
+          "confidenceBand": {
+            "type": "string",
+            "enum": ["HIGH", "MEDIUM", "LOW", "INCONCLUSIVE"],
+            "description": "\"Reliability of the measurement\". A measurement alongside other changes, not a proven cause."
+          },
+          "confounded": {
+            "type": "boolean",
+            "description": "`true` = something else was going on too (see `confoundReasons`): a mixed picture."
+          },
+          "confoundReasons": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "serpLayoutChecked": {
+            "type": ["boolean", "null"]
+          },
+          "backlinksChecked": {
+            "type": ["boolean", "null"]
+          },
+          "outcome": {
+            "type": "string",
+            "enum": ["positive", "declined", "stable", "confounded", "insufficient"],
+            "description": "The outcome in one word: `confounded` = a mixed picture, `insufficient` = too little to say, `stable` = no noticeable difference, `positive` or `declined` = the direction of `deltaPct`. A measurement alongside other changes, not a proven cause."
+          },
+          "comparison": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/V1ResultComparison"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "What `deltaPct` is measured against: `control` = a comparison group of pages without a task; `beforeAfter` = the period before; `null` = a result from before comparison groups existed (also the period before)."
+          }
+        },
+        "required": [
+          "id",
+          "taskId",
+          "taskTitle",
+          "opportunityType",
+          "changeType",
+          "pageUrl",
+          "markedDoneAt",
+          "baselineWindowStart",
+          "baselineWindowEnd",
+          "monitoringWindowEnd",
+          "computedAt",
+          "metric",
+          "baselineValue",
+          "postValue",
+          "deltaPct",
+          "baselineImpressions",
+          "confidenceBand",
+          "confounded",
+          "confoundReasons",
+          "serpLayoutChecked",
+          "backlinksChecked",
+          "outcome"
+        ],
+        "additionalProperties": false
+      },
+      "V1ResultComparison": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "control"
+              },
+              "stratum": {
+                "type": "string",
+                "enum": ["SAME_SELECTION", "TRAFFIC_BAND", "SITE"]
+              },
+              "pageCount": {
+                "type": "number"
+              },
+              "pageDeltaPct": {
+                "type": ["number", "null"]
+              },
+              "controlDeltaPct": {
+                "type": "number"
+              }
+            },
+            "required": ["kind", "stratum", "pageCount", "pageDeltaPct", "controlDeltaPct"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "beforeAfter"
+              }
+            },
+            "required": ["kind"],
+            "additionalProperties": false
+          }
+        ],
+        "description": "The comparison group of a result. `stratum` names the kind of group. `pageDeltaPct` is the change of the page itself, `controlDeltaPct` that of the group."
+      },
+      "V1UpcomingResult": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string"
+          },
+          "taskTitle": {
+            "type": "string"
+          },
+          "changeType": {
+            "type": "string"
+          },
+          "pageUrl": {
+            "type": "string"
+          },
+          "markedDoneAt": {
+            "type": "string"
+          },
+          "expectedAt": {
+            "type": "string"
+          }
+        },
+        "required": ["taskId", "taskTitle", "changeType", "pageUrl", "markedDoneAt", "expectedAt"],
+        "additionalProperties": false
+      },
+      "V1ResultsMeta": {
+        "type": "object",
+        "properties": {
+          "locale": {
+            "$ref": "#/components/schemas/Locale"
+          },
+          "nextCursor": {
+            "type": ["string", "null"],
+            "description": "Pass this as `cursor` for the next page; `null` = last page."
+          },
+          "upcoming": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/V1UpcomingResult"
+            },
+            "description": "Only on the first page (without cursor): measurements still running."
+          }
+        },
+        "required": ["locale", "nextCursor", "upcoming"],
+        "additionalProperties": false
+      },
+      "V1PeriodCompared": {
+        "type": "object",
+        "properties": {
+          "current": {
+            "type": "number"
+          },
+          "previous": {
+            "type": "number"
+          }
+        },
+        "required": ["current", "previous"],
+        "additionalProperties": false
+      },
+      "V1Kpis": {
+        "type": "object",
+        "properties": {
+          "inventory": {
+            "type": "object",
+            "properties": {
+              "openOpportunitiesByPriority": {
+                "type": "object",
+                "properties": {
+                  "LOW": {
+                    "type": "number"
+                  },
+                  "MEDIUM": {
+                    "type": "number"
+                  },
+                  "HIGH": {
+                    "type": "number"
+                  },
+                  "total": {
+                    "type": "number"
+                  }
+                },
+                "required": ["LOW", "MEDIUM", "HIGH", "total"],
+                "additionalProperties": false
+              },
+              "newOpportunitiesThisPeriod": {
+                "type": "number"
+              }
+            },
+            "required": ["openOpportunitiesByPriority", "newOpportunitiesThisPeriod"],
+            "additionalProperties": false
+          },
+          "throughput": {
+            "type": "object",
+            "properties": {
+              "tasksCompletedThisPeriod": {
+                "type": "number"
+              },
+              "medianCycleTimeDays": {
+                "type": ["number", "null"]
+              }
+            },
+            "required": ["tasksCompletedThisPeriod", "medianCycleTimeDays"],
+            "additionalProperties": false
+          },
+          "monitoring": {
+            "type": "object",
+            "properties": {
+              "changesInMonitoring": {
+                "type": "number"
+              },
+              "nextResultExpectedAt": {
+                "type": ["string", "null"]
+              }
+            },
+            "required": ["changesInMonitoring", "nextResultExpectedAt"],
+            "additionalProperties": false
+          },
+          "evidence": {
+            "type": "object",
+            "properties": {
+              "resultsPositive": {
+                "type": "number"
+              },
+              "resultsTotal": {
+                "type": "number"
+              },
+              "resultsByConfidenceBand": {
+                "type": "object",
+                "properties": {
+                  "HIGH": {
+                    "type": "number"
+                  },
+                  "MEDIUM": {
+                    "type": "number"
+                  },
+                  "LOW": {
+                    "type": "number"
+                  },
+                  "INCONCLUSIVE": {
+                    "type": "number"
+                  }
+                },
+                "required": ["HIGH", "MEDIUM", "LOW", "INCONCLUSIVE"],
+                "additionalProperties": false
+              },
+              "resultsConfounded": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "resultsPositive",
+              "resultsTotal",
+              "resultsByConfidenceBand",
+              "resultsConfounded"
+            ],
+            "additionalProperties": false
+          },
+          "impact": {
+            "type": "object",
+            "properties": {
+              "estimatedIncrementalClicksBand": {
+                "type": "string"
+              },
+              "estimatedIncrementalClicksSum": {
+                "type": "number"
+              }
+            },
+            "required": ["estimatedIncrementalClicksBand", "estimatedIncrementalClicksSum"],
+            "additionalProperties": false
+          },
+          "context": {
+            "type": "object",
+            "properties": {
+              "siteClicks": {
+                "$ref": "#/components/schemas/V1PeriodCompared"
+              },
+              "siteImpressions": {
+                "$ref": "#/components/schemas/V1PeriodCompared"
+              },
+              "avgPosition": {
+                "$ref": "#/components/schemas/V1PeriodCompared"
+              },
+              "previousCovered": {
+                "type": "boolean",
+                "description": "`false` = the stored data does not fully cover the previous period: `previous` is then a sum over fewer days and not worth comparing. Also applies to `searchPresence`."
+              }
+            },
+            "required": ["siteClicks", "siteImpressions", "avgPosition", "previousCovered"],
+            "additionalProperties": false
+          },
+          "searchPresence": {
+            "type": "object",
+            "properties": {
+              "pagesWithImpressions": {
+                "$ref": "#/components/schemas/V1PeriodCompared"
+              },
+              "queriesWithImpressions": {
+                "$ref": "#/components/schemas/V1PeriodCompared"
+              },
+              "totalImpressions": {
+                "$ref": "#/components/schemas/V1PeriodCompared"
+              },
+              "indexablePages": {
+                "type": "number"
+              },
+              "indexSample": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "inspectedPages": {
+                        "type": "number"
+                      },
+                      "indexedPages": {
+                        "type": "number"
+                      },
+                      "indexedShare": {
+                        "type": "number"
+                      },
+                      "latestInspectedAt": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "inspectedPages",
+                      "indexedPages",
+                      "indexedShare",
+                      "latestInspectedAt"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "belowTrafficThreshold": {
+                "type": "boolean"
+              },
+              "gscConnected": {
+                "type": "boolean"
+              },
+              "gscDataSince": {
+                "type": ["string", "null"]
+              },
+              "lastSuccessfulCrawlAt": {
+                "type": ["string", "null"]
+              },
+              "firstSuccessfulCrawlAt": {
+                "type": ["string", "null"]
+              }
+            },
+            "required": [
+              "pagesWithImpressions",
+              "queriesWithImpressions",
+              "totalImpressions",
+              "indexablePages",
+              "indexSample",
+              "belowTrafficThreshold",
+              "gscConnected",
+              "gscDataSince",
+              "lastSuccessfulCrawlAt",
+              "firstSuccessfulCrawlAt"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "inventory",
+          "throughput",
+          "monitoring",
+          "evidence",
+          "impact",
+          "context",
+          "searchPresence"
+        ],
+        "additionalProperties": false
+      },
+      "V1KpisMeta": {
+        "type": "object",
+        "properties": {
+          "periodStart": {
+            "type": "string"
+          },
+          "periodEnd": {
+            "type": "string"
+          }
+        },
+        "required": ["periodStart", "periodEnd"],
+        "additionalProperties": false
+      },
+      "V1TimeseriesPoint": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "description": "A day (`YYYY-MM-DD`), for `week` the Monday of the ISO week."
+          },
+          "clicks": {
+            "type": "number",
+            "description": "For `week` the average per known day (the sum is in `totals`)."
+          },
+          "impressions": {
+            "type": "number"
+          },
+          "ctr": {
+            "type": ["number", "null"]
+          },
+          "position": {
+            "type": ["number", "null"]
+          },
+          "lowVolume": {
+            "type": "boolean",
+            "description": "Low traffic: the value is mostly noise."
+          },
+          "settled": {
+            "type": "boolean",
+            "description": "`false` = still provisional; Search Console corrects recent days."
+          },
+          "totals": {
+            "type": "object",
+            "properties": {
+              "clicks": {
+                "type": "number"
+              },
+              "impressions": {
+                "type": "number"
+              }
+            },
+            "required": ["clicks", "impressions"],
+            "additionalProperties": false,
+            "description": "Only for `week`."
+          },
+          "dayCount": {
+            "type": "number"
+          },
+          "incomplete": {
+            "type": "boolean"
+          }
+        },
+        "required": ["date", "clicks", "impressions", "ctr", "position", "lowVolume", "settled"],
+        "additionalProperties": false
+      },
+      "V1TimeseriesMarker": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": ["change", "event"]
+          },
+          "id": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": ["string", "null"],
+            "description": "Only for `event`: end of a rollout."
+          },
+          "taskId": {
+            "type": "string",
+            "description": "Only for `change`."
+          },
+          "taskTitle": {
+            "type": "string"
+          },
+          "changeType": {
+            "type": ["string", "null"]
+          },
+          "pageUrl": {
+            "type": ["string", "null"]
+          },
+          "status": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "description": "Only for `event`."
+          },
+          "title": {
+            "type": "string"
+          },
+          "sourceUrl": {
+            "type": ["string", "null"]
+          }
+        },
+        "required": ["kind", "id", "date"],
+        "additionalProperties": false
+      },
+      "V1Timeseries": {
+        "type": "object",
+        "properties": {
+          "granularity": {
+            "type": "string",
+            "enum": ["day", "week"]
+          },
+          "effectiveFrom": {
+            "type": ["string", "null"]
+          },
+          "effectiveTo": {
+            "type": ["string", "null"]
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/V1TimeseriesPoint"
+            }
+          },
+          "totals": {
+            "type": "object",
+            "properties": {
+              "clicks": {
+                "type": "number"
+              },
+              "impressions": {
+                "type": "number"
+              },
+              "ctr": {
+                "type": ["number", "null"]
+              },
+              "position": {
+                "type": ["number", "null"]
+              }
+            },
+            "required": ["clicks", "impressions", "ctr", "position"],
+            "additionalProperties": false
+          },
+          "gaps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "from": {
+                  "type": "string"
+                },
+                "to": {
+                  "type": "string"
+                }
+              },
+              "required": ["from", "to"],
+              "additionalProperties": false
+            },
+            "description": "Days within the period without a measurement."
+          },
+          "lastSyncedDate": {
+            "type": ["string", "null"]
+          },
+          "lastSuccessfulSyncAt": {
+            "type": ["string", "null"]
+          },
+          "hasIncompleteDays": {
+            "type": "boolean"
+          },
+          "sourceMayHaveChanged": {
+            "type": "boolean",
+            "description": "`true` = the source (Search Console property) may have changed within the period."
+          },
+          "sourceChangeDates": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The days on which the source changed; the properties themselves are not included."
+          },
+          "coverageApproximate": {
+            "type": "boolean"
+          },
+          "markers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/V1TimeseriesMarker"
+            }
+          },
+          "markersTruncated": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "granularity",
+          "effectiveFrom",
+          "effectiveTo",
+          "points",
+          "totals",
+          "gaps",
+          "lastSyncedDate",
+          "lastSuccessfulSyncAt",
+          "hasIncompleteDays",
+          "sourceMayHaveChanged",
+          "sourceChangeDates",
+          "coverageApproximate",
+          "markers",
+          "markersTruncated"
+        ],
+        "additionalProperties": false
+      },
+      "V1TimeseriesMeta": {
+        "type": "object",
+        "properties": {
+          "locale": {
+            "$ref": "#/components/schemas/Locale"
+          }
+        },
+        "required": ["locale"],
+        "additionalProperties": false
+      },
+      "V1VisibilityEngine": {
+        "type": "string",
+        "enum": ["chatgpt", "google_ai_mode"],
+        "description": "The measured AI engines."
+      },
+      "V1VisibilitySourceType": {
+        "type": "string",
+        "enum": [
+          "OWN_SITE",
+          "NEWS",
+          "FORUM",
+          "REVIEW",
+          "REFERENCE",
+          "SOCIAL_VIDEO",
+          "GOV_EDU",
+          "OTHER"
+        ],
+        "description": "The kind of website of a source in an AI answer."
+      },
+      "V1VisibilityInterval": {
+        "type": "object",
+        "properties": {
+          "lowerBound": {
+            "type": "number"
+          },
+          "upperBound": {
+            "type": "number"
+          }
+        },
+        "required": ["lowerBound", "upperBound"],
+        "additionalProperties": false,
+        "description": "The uncertainty interval as fractions 0..1."
+      },
+      "V1VisibilityMetric": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number"
+          },
+          "proportion": {
+            "type": "number",
+            "description": "Fraction 0..1, not a percentage."
+          },
+          "interval": {
+            "$ref": "#/components/schemas/V1VisibilityInterval"
+          }
+        },
+        "required": ["count", "proportion", "interval"],
+        "additionalProperties": false
+      },
+      "V1VisibilityResultInsufficientData": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "INSUFFICIENT_DATA"
+          },
+          "attemptedObservations": {
+            "type": "number"
+          },
+          "successfulObservations": {
+            "type": "number"
+          },
+          "failedObservations": {
+            "type": "number"
+          },
+          "requiredObservations": {
+            "type": "number",
+            "description": "This many successful observations are needed before a figure appears."
+          }
+        },
+        "required": [
+          "status",
+          "attemptedObservations",
+          "successfulObservations",
+          "failedObservations",
+          "requiredObservations"
+        ],
+        "additionalProperties": false,
+        "description": "Not enough observations yet: no figure, but the counts."
+      },
+      "V1VisibilityResultComputed": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "COMPUTED"
+          },
+          "attemptedObservations": {
+            "type": "number"
+          },
+          "successfulObservations": {
+            "type": "number"
+          },
+          "failedObservations": {
+            "type": "number"
+          },
+          "mentioned": {
+            "$ref": "#/components/schemas/V1VisibilityMetric",
+            "description": "In how many answers the website or brand was mentioned."
+          },
+          "cited": {
+            "$ref": "#/components/schemas/V1VisibilityMetric",
+            "description": "In how many answers a page of the website was cited as a source."
+          }
+        },
+        "required": [
+          "status",
+          "attemptedObservations",
+          "successfulObservations",
+          "failedObservations",
+          "mentioned",
+          "cited"
+        ],
+        "additionalProperties": false
+      },
+      "V1VisibilityResult": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/V1VisibilityResultInsufficientData"
+          },
+          {
+            "$ref": "#/components/schemas/V1VisibilityResultComputed"
+          }
+        ]
+      },
+      "V1VisibilityEngineResult": {
+        "type": "object",
+        "properties": {
+          "engine": {
+            "$ref": "#/components/schemas/V1VisibilityEngine"
+          },
+          "result": {
+            "$ref": "#/components/schemas/V1VisibilityResult"
+          }
+        },
+        "required": ["engine", "result"],
+        "additionalProperties": false
+      },
+      "V1VisibilitySources": {
+        "type": "object",
+        "properties": {
+          "answersWithSources": {
+            "type": "number",
+            "description": "Answers with recorded sources; answers without sources are not counted."
+          },
+          "byType": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "$ref": "#/components/schemas/V1VisibilitySourceType"
+                },
+                "answers": {
+                  "type": "number"
+                }
+              },
+              "required": ["type", "answers"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["answersWithSources", "byType"],
+        "additionalProperties": false,
+        "description": "The sources of successful answers per source type: in how many answers at least one source of that type appeared."
+      },
+      "V1VisibilityReliability": {
+        "type": "object",
+        "properties": {
+          "band": {
+            "type": "string",
+            "enum": ["HIGH", "MEDIUM", "LOW", "INCONCLUSIVE"]
+          },
+          "engine": {
+            "$ref": "#/components/schemas/V1VisibilityEngine"
+          },
+          "answers": {
+            "type": "number",
+            "description": "Successful answers of that engine in the window."
+          },
+          "questions": {
+            "type": "number",
+            "description": "Distinct questions with a successful answer from that engine."
+          }
+        },
+        "required": ["band", "engine", "answers", "questions"],
+        "additionalProperties": false,
+        "description": "How reliable the figures are, with the counts behind the band."
+      },
+      "V1VisibilityStop": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "quota_reached"
+              },
+              "resumesOn": {
+                "type": "string"
+              }
+            },
+            "required": ["kind", "resumesOn"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "cost_ceiling_reached"
+              },
+              "resumesOn": {
+                "type": "string"
+              }
+            },
+            "required": ["kind", "resumesOn"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "paused"
+              }
+            },
+            "required": ["kind"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "prompts_in_cooldown"
+              },
+              "promptCount": {
+                "type": "number"
+              },
+              "retryOn": {
+                "type": "string"
+              }
+            },
+            "required": ["kind", "promptCount", "retryOn"],
+            "additionalProperties": false
+          }
+        ],
+        "description": "Why nothing is measured right now (for all questions)."
+      },
+      "V1VisibilityOutlook": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "const": "REACHED"
+              }
+            },
+            "required": ["status"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "const": "EXPECTED"
+              },
+              "expectedOn": {
+                "type": "string"
+              }
+            },
+            "required": ["status", "expectedOn"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "const": "NEEDS_MORE_PROMPTS"
+              },
+              "additionalPrompts": {
+                "type": "number"
+              },
+              "minimumPrompts": {
+                "type": "number"
+              }
+            },
+            "required": ["status", "additionalPrompts", "minimumPrompts"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "const": "NOT_IN_PLAN"
+              }
+            },
+            "required": ["status"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "const": "PAUSED"
+              }
+            },
+            "required": ["status"],
+            "additionalProperties": false
+          }
+        ],
+        "description": "Per engine whether a figure is within reach: an estimate based on the schedule, not a prediction of the outcome."
+      },
+      "V1VisibilityCount": {
+        "type": "object",
+        "properties": {
+          "observed": {
+            "type": "number"
+          },
+          "mentioned": {
+            "type": "number"
+          },
+          "cited": {
+            "type": "number"
+          }
+        },
+        "required": ["observed", "mentioned", "cited"],
+        "additionalProperties": false
+      },
+      "V1VisibilityPromptSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "containsBrand": {
+            "type": "boolean",
+            "description": "The question names the brand or the domain."
+          },
+          "sources": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/V1VisibilitySources"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "perEngine": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "engine": {
+                  "$ref": "#/components/schemas/V1VisibilityEngine"
+                },
+                "retrievedNotCited": {
+                  "type": ["number", "null"],
+                  "description": "`null` = unknown."
+                },
+                "observed": {
+                  "type": "number"
+                },
+                "mentioned": {
+                  "type": "number"
+                },
+                "cited": {
+                  "type": "number"
+                }
+              },
+              "required": ["cited", "engine", "mentioned", "observed", "retrievedNotCited"]
+            }
+          }
+        },
+        "required": ["id", "text", "containsBrand", "sources", "perEngine"],
+        "additionalProperties": false
+      },
+      "V1Visibility": {
+        "type": "object",
+        "properties": {
+          "windowStart": {
+            "type": "string"
+          },
+          "windowEnd": {
+            "type": "string"
+          },
+          "minSuccessfulObservations": {
+            "type": "number"
+          },
+          "trackedEngines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/V1VisibilityEngine"
+            }
+          },
+          "unavailableEngines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/V1VisibilityEngine"
+            },
+            "description": "Engines with earlier observations in the window that are not measured now: \"not measured\", never a percentage."
+          },
+          "reliability": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/V1VisibilityReliability"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "`null` without engines."
+          },
+          "engines": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "engine": {
+                  "$ref": "#/components/schemas/V1VisibilityEngine"
+                },
+                "result": {
+                  "$ref": "#/components/schemas/V1VisibilityResult"
+                },
+                "retrievedNotCited": {
+                  "type": ["number", "null"],
+                  "description": "Answers in which the engine looked at one of your pages but did not cite it; `null` = unknown."
+                },
+                "sources": {
+                  "$ref": "#/components/schemas/V1VisibilitySources"
+                }
+              },
+              "required": ["engine", "result", "retrievedNotCited", "sources"],
+              "additionalProperties": false
+            }
+          },
+          "citedPages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "number"
+                }
+              },
+              "required": ["url", "count"],
+              "additionalProperties": false
+            }
+          },
+          "prompts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/V1VisibilityPromptSummary"
+            }
+          },
+          "absentPrompts": {
+            "type": "object",
+            "properties": {
+              "minObservationsPerEngine": {
+                "type": "number"
+              },
+              "promptIds": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": ["minObservationsPerEngine", "promptIds"],
+            "additionalProperties": false,
+            "description": "Questions in which the website does not (yet) appear; `promptIds` refers to `prompts[].id`."
+          },
+          "brandPrompts": {
+            "type": "object",
+            "properties": {
+              "promptCount": {
+                "type": "number"
+              },
+              "perEngine": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "engine": {
+                      "$ref": "#/components/schemas/V1VisibilityEngine"
+                    },
+                    "observed": {
+                      "type": "number"
+                    },
+                    "mentioned": {
+                      "type": "number"
+                    },
+                    "cited": {
+                      "type": "number"
+                    }
+                  },
+                  "required": ["cited", "engine", "mentioned", "observed"]
+                }
+              }
+            },
+            "required": ["promptCount", "perEngine"],
+            "additionalProperties": false,
+            "description": "Questions with the brand or the domain, as a count only."
+          },
+          "googleAiOverview": {
+            "type": "object",
+            "properties": {
+              "observed": {
+                "type": "number"
+              },
+              "withAiOverview": {
+                "type": "number"
+              },
+              "cited": {
+                "type": "number"
+              }
+            },
+            "required": ["observed", "withAiOverview", "cited"],
+            "additionalProperties": false,
+            "description": "A Google result with or without an AI Overview, per search term."
+          },
+          "previousGoogleAiOverview": {
+            "type": "object",
+            "properties": {
+              "observed": {
+                "type": "number"
+              },
+              "withAiOverview": {
+                "type": "number"
+              },
+              "cited": {
+                "type": "number"
+              }
+            },
+            "required": ["observed", "withAiOverview", "cited"],
+            "additionalProperties": false
+          },
+          "lastObservedAt": {
+            "type": ["string", "null"],
+            "description": "ISO timestamp of the latest successful observation; `null` = never."
+          },
+          "nextMeasurementOn": {
+            "type": ["string", "null"],
+            "description": "UTC day on which the next measurement is scheduled; `null` = unknown or stopped."
+          },
+          "stops": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/V1VisibilityStop"
+            }
+          },
+          "outlook": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "engine": {
+                  "$ref": "#/components/schemas/V1VisibilityEngine"
+                },
+                "outlook": {
+                  "$ref": "#/components/schemas/V1VisibilityOutlook"
+                }
+              },
+              "required": ["engine", "outlook"],
+              "additionalProperties": false
+            }
+          },
+          "previous": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "windowStart": {
+                    "type": "string"
+                  },
+                  "windowEnd": {
+                    "type": "string",
+                    "description": "Exclusive; equal to `windowStart` of the current measurement."
+                  },
+                  "engines": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/V1VisibilityEngineResult"
+                    }
+                  }
+                },
+                "required": ["windowStart", "windowEnd", "engines"],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The same proportion per engine over the window before: a separate observation of its own, without a difference or direction. `null` = no tracked questions."
+          }
+        },
+        "required": [
+          "windowStart",
+          "windowEnd",
+          "minSuccessfulObservations",
+          "trackedEngines",
+          "unavailableEngines",
+          "reliability",
+          "engines",
+          "citedPages",
+          "prompts",
+          "absentPrompts",
+          "brandPrompts",
+          "googleAiOverview",
+          "previousGoogleAiOverview",
+          "lastObservedAt",
+          "nextMeasurementOn",
+          "stops",
+          "outlook",
+          "previous"
+        ],
+        "additionalProperties": false,
+        "description": "The AI visibility of a website over a recent window, per engine."
+      },
+      "V1VisibilityRounds": {
+        "type": "object",
+        "properties": {
+          "minSuccessfulObservations": {
+            "type": "number"
+          },
+          "trackedEngines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/V1VisibilityEngine"
+            }
+          },
+          "unavailableEngines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/V1VisibilityEngine"
+            }
+          },
+          "rounds": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "weekStart": {
+                  "type": "string",
+                  "description": "ISO, Monday 00:00 UTC."
+                },
+                "engines": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/V1VisibilityEngineResult"
+                  }
+                }
+              },
+              "required": ["weekStart", "engines"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["minSuccessfulObservations", "trackedEngines", "unavailableEngines", "rounds"],
+        "additionalProperties": false,
+        "description": "The completed measurement rounds, oldest first, side by side without a difference or trend."
+      },
+      "V1VisibilityPrompt": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["SUGGESTED", "ACTIVE"],
+            "description": "A suggested question awaits approval in the customer app; only a tracked (`ACTIVE`) question is measured."
+          },
+          "source": {
+            "type": "string",
+            "enum": ["GENERATED", "CUSTOMER"]
+          },
+          "containsBrand": {
+            "type": "boolean"
+          },
+          "theme": {
+            "type": ["string", "null"],
+            "description": "The topic of the question; `null` while not yet classified."
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "text", "status", "source", "containsBrand", "theme", "createdAt"],
+        "additionalProperties": false
+      },
+      "V1VisibilityPrompts": {
+        "type": "object",
+        "properties": {
+          "brandName": {
+            "type": ["string", "null"]
+          },
+          "limit": {
+            "type": "number",
+            "description": "The number of tracked questions the plan allows."
+          },
+          "activeCount": {
+            "type": "number"
+          },
+          "prompts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/V1VisibilityPrompt"
+            }
+          }
+        },
+        "required": ["brandName", "limit", "activeCount", "prompts"],
+        "additionalProperties": false,
+        "description": "The tracked and suggested questions. Read-only: you manage questions in the customer app."
+      },
+      "V1VisibilityThemeSources": {
+        "type": "object",
+        "properties": {
+          "answersWithSources": {
+            "type": "number"
+          },
+          "hosts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "host": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": ["NEWS", "FORUM", "REVIEW", "REFERENCE", "SOCIAL_VIDEO", "GOV_EDU"],
+                  "description": "The kind of website of a source in an AI answer."
+                },
+                "answers": {
+                  "type": "number"
+                }
+              },
+              "required": ["host", "type", "answers"],
+              "additionalProperties": false
+            }
+          },
+          "otherHosts": {
+            "type": "number",
+            "description": "Hosts that are not named, as a count. Your own site is not counted."
+          }
+        },
+        "required": ["answersWithSources", "hosts", "otherHosts"],
+        "additionalProperties": false,
+        "description": "A source by name: only recurring hosts of a known source type."
+      },
+      "V1VisibilityTheme": {
+        "type": "object",
+        "properties": {
+          "theme": {
+            "type": "string"
+          },
+          "promptCount": {
+            "type": "number"
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                }
+              },
+              "required": ["id", "text"],
+              "additionalProperties": false
+            }
+          },
+          "engines": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "engine": {
+                  "$ref": "#/components/schemas/V1VisibilityEngine"
+                },
+                "answers": {
+                  "type": "number",
+                  "description": "Successful answers of this engine to the questions of the topic, in the window."
+                },
+                "mentioned": {
+                  "type": "number"
+                },
+                "cited": {
+                  "type": "number"
+                }
+              },
+              "required": ["engine", "answers", "mentioned", "cited"],
+              "additionalProperties": false
+            }
+          },
+          "flagged": {
+            "type": "boolean",
+            "description": "Flagged as a topic to work on."
+          },
+          "answersSinceTask": {
+            "type": ["number", "null"],
+            "description": "Successful answers since the task; `null` without a task. A count, not a comparison."
+          },
+          "sources": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/V1VisibilityThemeSources"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "`null` when there is too little to name sources."
+          }
+        },
+        "required": [
+          "theme",
+          "promptCount",
+          "questions",
+          "engines",
+          "flagged",
+          "answersSinceTask",
+          "sources"
+        ],
+        "additionalProperties": false
+      },
+      "V1VisibilityThemes": {
+        "type": "object",
+        "properties": {
+          "themes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/V1VisibilityTheme"
+            }
+          },
+          "opportunity": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["OPEN", "CONVERTED"]
+                  },
+                  "task": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": ["TODO", "IN_PROGRESS", "DONE"]
+                          },
+                          "publishedUrl": {
+                            "type": ["string", "null"],
+                            "description": "The page that carries the content; `null` until the task is done."
+                          },
+                          "since": {
+                            "type": "string",
+                            "description": "From when \"since the task\" counts."
+                          }
+                        },
+                        "required": ["id", "status", "publishedUrl", "since"],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": ["id", "status", "task"],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The opportunity and the task that followed from the scan; `id` refers to `/v1/websites/{id}/opportunities/{id}`."
+          },
+          "observationsTruncated": {
+            "type": "boolean",
+            "description": "The read limit was reached: the oldest answers are missing from the counts."
+          }
+        },
+        "required": ["themes", "opportunity", "observationsTruncated"],
+        "additionalProperties": false,
+        "description": "\"Where you are missing\": topics with answer counts per engine. An observation, not a judgement."
+      },
+      "V1AiReferralSource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "enum": ["MEASURED", "NOT_MEASURED_YET"],
+            "description": "`NOT_MEASURED_YET`: the source started after the covered days; `sessions` is then `null` (unknown)."
+          },
+          "measuredFrom": {
+            "type": "string",
+            "description": "From this day (YYYY-MM-DD) Lastmod measures this source for this website."
+          },
+          "sessions": {
+            "type": ["number", "null"],
+            "description": "`null` with `MEASURED` = too few observations to show, never 0."
+          }
+        },
+        "required": ["id", "label", "state", "measuredFrom", "sessions"],
+        "additionalProperties": false
+      },
+      "V1AiReferralTotal": {
+        "type": "object",
+        "properties": {
+          "sessions": {
+            "type": ["number", "null"],
+            "description": "`null` = too few to show, or `status` is not `OK`."
+          },
+          "includesSourcesBelowThreshold": {
+            "type": "boolean",
+            "description": "The total includes sessions of sources too small to show: it is then a lower bound."
+          }
+        },
+        "required": ["sessions", "includesSourcesBelowThreshold"],
+        "additionalProperties": false
+      },
+      "V1AiReferrals": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["NOT_CONNECTED", "NOT_MEASURED", "OK"],
+            "description": "`NOT_CONNECTED` = no Google Analytics connected; `NOT_MEASURED` = no covered day yet."
+          },
+          "period": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              },
+              "days": {
+                "type": "number"
+              }
+            },
+            "required": ["from", "to", "days"],
+            "additionalProperties": false
+          },
+          "coverage": {
+            "type": "object",
+            "properties": {
+              "measuredDays": {
+                "type": "number"
+              }
+            },
+            "required": ["measuredDays"],
+            "additionalProperties": false
+          },
+          "minSessions": {
+            "type": "number"
+          },
+          "total": {
+            "$ref": "#/components/schemas/V1AiReferralTotal"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/V1AiReferralSource"
+            }
+          },
+          "topPages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string"
+                },
+                "sessions": {
+                  "type": "number"
+                }
+              },
+              "required": ["url", "sessions"],
+              "additionalProperties": false
+            }
+          },
+          "previous": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "period": {
+                    "type": "object",
+                    "properties": {
+                      "from": {
+                        "type": "string"
+                      },
+                      "to": {
+                        "type": "string"
+                      },
+                      "days": {
+                        "type": "number"
+                      }
+                    },
+                    "required": ["from", "to", "days"],
+                    "additionalProperties": false
+                  },
+                  "coverage": {
+                    "type": "object",
+                    "properties": {
+                      "measuredDays": {
+                        "type": "number"
+                      }
+                    },
+                    "required": ["measuredDays"],
+                    "additionalProperties": false
+                  },
+                  "total": {
+                    "$ref": "#/components/schemas/V1AiReferralTotal"
+                  },
+                  "sources": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/V1AiReferralSource"
+                    }
+                  }
+                },
+                "required": ["period", "coverage", "total", "sources"],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The same count over the equally long period before, without a difference; `null` = that period was not covered."
+          }
+        },
+        "required": [
+          "status",
+          "period",
+          "coverage",
+          "minSessions",
+          "total",
+          "sources",
+          "topPages",
+          "previous"
+        ],
+        "additionalProperties": false,
+        "description": "Sessions in Google Analytics that come from AI assistants, as context for the website. Only covered days count."
+      },
+      "V1Error": {
+        "type": "object",
+        "description": "An error. `message` is a text, or for a validation error (400) a list of texts. Some errors carry an `errorCode`.",
+        "properties": {
+          "statusCode": {
+            "type": "integer"
+          },
+          "message": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "errorCode": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          }
+        },
+        "required": ["statusCode", "message"]
+      }
+    }
+  }
+}
