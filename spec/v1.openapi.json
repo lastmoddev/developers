@@ -2524,7 +2524,7 @@
       "V1VisibilityEngine": {
         "type": "string",
         "enum": ["chatgpt", "google_ai_mode", "gemini", "perplexity", "claude"],
-        "description": "The measured AI engines."
+        "description": "The AI engines a result can name. `claude` is reserved: it is not measured yet, so no result names it."
       },
       "V1VisibilitySourceType": {
         "type": "string",
