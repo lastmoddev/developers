@@ -54,7 +54,7 @@
 <li><code>websiteId</code> (path, string, required)</li>
 <li><code>locale</code> (query, string (en, nl), optional): The language of the texts (<code>reason</code>, <code>recommendedAction</code>, task titles). Defaults to <code>en</code>.</li>
 <li><code>status</code> (query, string (OPEN, DISMISSED, CONVERTED, RESOLVED, VOIDED, ALL), optional): Only opportunities with this status. Without this parameter <code>RESOLVED</code> and <code>VOIDED</code> are omitted; <code>ALL</code> returns every status in one list.</li>
-<li><code>type</code> (query, string, optional): Only opportunities of this <code>type</code>, as it appears in the list.</li>
+<li><code>type</code> (query, string, optional): Only opportunities of this <code>type</code>, as it appears in the list. An unknown value is a 400.</li>
 <li><code>limit</code> (query, integer, optional): Number of opportunities per page, at most 200 (also the default). <code>meta.truncated</code> is <code>true</code> if there are more; then follow <code>meta.nextCursor</code>.</li>
 <li><code>cursor</code> (query, string, optional): <code>meta.nextCursor</code> of the previous page. Sorted by <code>lastSeenAt</code> descending, then <code>id</code>.</li>
 </ul>

@@ -1,0 +1,15 @@
+# Lastmod for developers
+
+> Lastmod (lastmod.ai) is the proof layer for SEO and AI visibility: it finds what your website should change, looks for the change on the live page, and measures what changed afterwards. This site documents the read-only Lastmod API and MCP server.
+
+## Documentation
+
+- [Lastmod for developers: API and MCP server](https://developers.lastmod.ai/): Read-only REST API and MCP server for Lastmod: opportunities, tasks, measured results, search performance and AI visibility, with an OpenAPI description.
+- [Lastmod API reference — read-only /v1 REST API](https://developers.lastmod.ai/api/): Reference of the Lastmod /v1 REST API: every read-only endpoint with its parameters, responses and errors, described in OpenAPI 3.1.
+- [Lastmod MCP server — read-only tools for AI assistants](https://developers.lastmod.ai/mcp/): The Lastmod MCP server: read-only tools that let an AI assistant such as Claude or ChatGPT read your opportunities, tasks, results and AI visibility.
+- [OpenAPI description](https://developers.lastmod.ai/spec/v1.openapi.json): the machine-readable description of the read-only /v1 API, as JSON.
+
+## More about Lastmod
+
+- [lastmod.ai](https://www.lastmod.ai/llms.txt): what Lastmod is, how it works and the plans, as a map for AI assistants.
+- [Connect an AI assistant](https://www.lastmod.ai/en/connect-ai-assistant): step-by-step guide to connect Claude or ChatGPT to the MCP server.

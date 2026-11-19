@@ -136,7 +136,7 @@
             "name": "type",
             "in": "query",
             "required": false,
-            "description": "Only opportunities of this `type`, as it appears in the list.",
+            "description": "Only opportunities of this `type`, as it appears in the list. An unknown value is a 400.",
             "schema": {
               "type": "string",
               "maxLength": 100
@@ -2523,7 +2523,7 @@
       },
       "V1VisibilityEngine": {
         "type": "string",
-        "enum": ["chatgpt", "google_ai_mode"],
+        "enum": ["chatgpt", "google_ai_mode", "gemini", "perplexity", "claude"],
         "description": "The measured AI engines."
       },
       "V1VisibilitySourceType": {
